@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- ================================================================
+       EDIT: Update these meta tags — they control how the link looks
+       when shared on WhatsApp, iMessage, Twitter, Facebook, etc.
+       ================================================================ -->
+  <title>Nithesh weds Harshitha</title>
+  <meta name="description" content="You are cordially invited to celebrate the wedding of Nithesh &amp; Harshitha." />
+
+  <!-- Open Graph / WhatsApp / Social Preview -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://yourusername.github.io/wedding/" /><!-- EDIT: your deployed URL -->
+  <meta property="og:title"       content="Nithesh weds Harshitha 🌹" />
+  <meta property="og:description" content="Join us for a day filled with love, laughter and happily ever after." />
+  <meta property="og:image"       content="assets/og-preview.jpg" /><!-- EDIT: add og-preview.jpg (1200×630px) to assets/ -->
+  <meta name="twitter:card"       content="summary_large_image" />
+
+  <!-- SVG favicon (rose) -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23F8C8DC'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23F4A6B7'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%23D96C7E'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23C2415A'/%3E%3C/svg%3E" />
+
+  <!-- Google Fonts — Great Vibes (script), Cormorant Garamond (display serif), Poppins (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+
+  <!-- GSAP core (free, CDN) — used for hero letter-stagger and section entrances -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============================== SCROLL PROGRESS BAR ============================== -->
+  <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
+
+  <!-- ============================== MUSIC TOGGLE ============================== -->
+  <!-- EDIT: Replace src with your audio file: "assets/background-music.mp3" -->
+  <audio id="bg-music" loop preload="none">
+    <source src="assets/background-music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="music-toggle" aria-label="Play background music">
+    <!-- Music-note icon (shown when music is off) -->
+    <svg id="icon-music" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+    </svg>
+    <!-- Muted icon (shown when music is on) -->
+    <svg id="icon-mute" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="display:none" aria-hidden="true">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  </button>
+
+  <!-- ============================== HERO SECTION ============================== -->
+  <section id="hero">
+    <!-- Floating petal canvas (drawn by JS) -->
+    <canvas id="petal-canvas" aria-hidden="true"></canvas>
+
+    <!-- Floral corner decorations (CSS background-image SVG) -->
+    <div class="hero-corner hero-corner--tl" aria-hidden="true"></div>
+    <div class="hero-corner hero-corner--tr" aria-hidden="true"></div>
+    <div class="hero-corner hero-corner--bl" aria-hidden="true"></div>
+    <div class="hero-corner hero-corner--br" aria-hidden="true"></div>
+
+    <div class="hero-content">
+
+      <!-- EDIT: Update eyebrow text -->
+      <p class="hero-eyebrow">Together with their families</p>
+
+      <h1 class="hero-names" aria-label="Nithesh weds Harshitha">
+        <!-- EDIT: Update groom name -->
+        <span class="hero-name hero-name--groom" aria-hidden="true">Nithesh</span>
+        <span class="hero-weds" aria-hidden="true">weds</span>
+        <!-- EDIT: Update bride name -->
+        <span class="hero-name hero-name--bride" aria-hidden="true">Harshitha</span>
+      </h1>
+
+      <!-- Decorative divider -->
+      <div class="hero-divider" aria-hidden="true">
+        <svg viewBox="0 0 240 24" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0"   y1="12" x2="90"  y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.5"/>
+          <path d="M104,12 C102,7 98,5 104,12 C110,19 112,5 104,12Z" fill="#D96C7E" opacity="0.7"/>
+          <circle cx="120" cy="12" r="3" fill="#C9A96E"/>
+          <path d="M136,12 C134,7 130,5 136,12 C142,19 144,5 136,12Z" fill="#D96C7E" opacity="0.7"/>
+          <line x1="150" y1="12" x2="240" y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.5"/>
+        </svg>
+      </div>
+
+      <!-- EDIT: Main invitation line -->
+      <p class="hero-invite">cordially invite you to celebrate their wedding</p>
+
+      <!-- EDIT: Update romantic tagline -->
+      <p class="hero-tagline">Two hearts, one love, a lifetime of happiness</p>
+
+      <!-- EDIT: Update wedding date display text -->
+      <p class="hero-date">15 · December · 2026</p>
+
+      <!-- Live countdown timer (JS-driven) -->
+      <div id="countdown" aria-label="Countdown to the wedding">
+        <div class="countdown-box">
+          <span class="countdown-num" id="cd-days">---</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cd-hours">--</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cd-mins">--</span>
+          <span class="countdown-label">Mins</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cd-secs">--</span>
+          <span class="countdown-label">Secs</span>
+        </div>
+      </div>
+
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-text">Scroll to explore</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+    </div><!-- .hero-content -->
+  </section>
+
+  <!-- ============================== EVENTS SCROLL-SNAP SECTIONS ============================== -->
+  <!--
+    scroll-snap-type: y mandatory is on <html> (see css/style.css).
+    Each .event section has scroll-snap-align: start in the page scroll context.
+    One scroll/swipe snaps cleanly from hero → event1 → event2 → event3 → event4.
+    Story/RSVP/Footer have no snap-align so they scroll freely afterwards.
+  -->
+
+    <!-- ─── EVENT 1: NICHAYATHARTHAM ─── -->
+    <section class="event" id="ev-nichayathartham" data-index="0"
+             aria-label="Nichayathartham event details">
+      <canvas class="event-petal-canvas" aria-hidden="true"></canvas>
+
+      <div class="event-content">
+        <!-- SVG: Rose ring wreath with N & H monogram -->
+        <div class="event-icon" aria-hidden="true">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#F4A6B7"
+                    stroke-width="0.8" stroke-dasharray="4 3" opacity="0.5"/>
+            <!-- Rose buds around the ring (8 positions) -->
+            <g>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(45 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(90 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(135 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(180 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(225 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(270 60 60)"/>
+              <ellipse cx="60" cy="10" rx="5" ry="7" fill="#D96C7E" opacity="0.8"
+                       transform="rotate(315 60 60)"/>
+            </g>
+            <!-- Leaf accents between buds -->
+            <g fill="#A8C5A0" opacity="0.65">
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(22.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(67.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(112.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(157.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(202.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(247.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(292.5 60 60)"/>
+              <ellipse cx="60" cy="14" rx="3" ry="5" transform="rotate(337.5 60 60)"/>
+            </g>
+            <!-- Center monogram disc -->
+            <circle cx="60" cy="60" r="30" fill="white" opacity="0.75"/>
+            <circle cx="60" cy="60" r="28" fill="none" stroke="#C9A96E"
+                    stroke-width="0.6" opacity="0.4"/>
+            <text x="60" y="53" text-anchor="middle" font-family="Georgia,serif"
+                  font-size="16" fill="#C2415A" font-style="italic">N</text>
+            <text x="60" y="67" text-anchor="middle" font-family="Georgia,serif"
+                  font-size="10" fill="#C9A96E">&amp;</text>
+            <text x="60" y="80" text-anchor="middle" font-family="Georgia,serif"
+                  font-size="16" fill="#C2415A" font-style="italic">H</text>
+          </svg>
+        </div>
+
+        <p class="event-label">First</p>
+        <h2 class="event-name">Nichayathartham</h2>
+        <p class="event-subtitle">The Sacred Engagement</p>
+        <div class="event-divider-line" aria-hidden="true"></div>
+        <!-- EDIT: Update date, time, and venue for Nichayathartham -->
+        <p class="event-date">DD Month 2026</p>
+        <p class="event-time">00:00 AM</p>
+        <p class="event-venue">[Venue Name]</p>
+        <p class="event-location">[City, State]</p>
+      </div>
+    </section>
+
+    <!-- ─── EVENT 2: RECEPTION ─── -->
+    <section class="event" id="ev-reception" data-index="1"
+             aria-label="Reception event details">
+      <canvas class="event-petal-canvas" aria-hidden="true"></canvas>
+
+      <div class="event-content">
+        <!-- SVG: Champagne flutes with floral base -->
+        <div class="event-icon" aria-hidden="true">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left flute -->
+            <path d="M42,22 C42,22 36,24 36,42 C36,58 44,62 44,72 L44,82 L56,82"
+                  fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M42,22 C42,22 50,24 50,42 C50,58 44,62 44,72"
+                  fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Right flute -->
+            <path d="M78,22 C78,22 72,24 72,42 C72,58 76,62 76,72 L76,82 L64,82"
+                  fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M78,22 C78,22 86,24 86,42 C86,58 76,62 76,72"
+                  fill="none" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Bubbles left flute -->
+            <circle cx="43" cy="52" r="1.5" fill="#C9A96E" opacity="0.6"/>
+            <circle cx="45" cy="40" r="1"   fill="#C9A96E" opacity="0.5"/>
+            <circle cx="41" cy="46" r="1"   fill="#C9A96E" opacity="0.4"/>
+            <!-- Bubbles right flute -->
+            <circle cx="77" cy="52" r="1.5" fill="#C9A96E" opacity="0.6"/>
+            <circle cx="75" cy="40" r="1"   fill="#C9A96E" opacity="0.5"/>
+            <circle cx="79" cy="46" r="1"   fill="#C9A96E" opacity="0.4"/>
+            <!-- Clinking star burst -->
+            <circle cx="60" cy="18" r="3.5" fill="#C9A96E" opacity="0.9"/>
+            <line x1="60" y1="12" x2="60" y2="10" stroke="#C9A96E" stroke-width="1.2"/>
+            <line x1="65" y1="13" x2="67" y2="11" stroke="#C9A96E" stroke-width="1.2"/>
+            <line x1="55" y1="13" x2="53" y2="11" stroke="#C9A96E" stroke-width="1.2"/>
+            <!-- Leaf sprigs at base -->
+            <path d="M38,88 C26,82 18,94 30,96 C42,98 42,86 38,88Z"
+                  fill="#A8C5A0" opacity="0.7"/>
+            <path d="M82,88 C94,82 102,94 90,96 C78,98 78,86 82,88Z"
+                  fill="#A8C5A0" opacity="0.7"/>
+            <!-- Rose at join of stems -->
+            <circle cx="60" cy="99" r="9"   fill="#F8C8DC" opacity="0.4"/>
+            <circle cx="60" cy="99" r="6"   fill="#F4A6B7" opacity="0.6"/>
+            <circle cx="60" cy="99" r="3.5" fill="#D96C7E" opacity="0.8"/>
+          </svg>
+        </div>
+
+        <p class="event-label">Second</p>
+        <h2 class="event-name">Reception</h2>
+        <p class="event-subtitle">An Evening of Celebration</p>
+        <div class="event-divider-line" aria-hidden="true"></div>
+        <!-- EDIT: Update date, time, and venue for Reception -->
+        <p class="event-date">DD Month 2026</p>
+        <p class="event-time">00:00 PM</p>
+        <p class="event-venue">[Venue Name]</p>
+        <p class="event-location">[City, State]</p>
+      </div>
+    </section>
+
+    <!-- ─── EVENT 3: UPANAYANAM ─── -->
+    <section class="event" id="ev-upanayanam" data-index="2"
+             aria-label="Upanayanam event details">
+      <canvas class="event-petal-canvas" aria-hidden="true"></canvas>
+
+      <div class="event-content">
+        <!-- SVG: Botanical leaf sprig with rose bud -->
+        <div class="event-icon" aria-hidden="true">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Main stem -->
+            <path d="M60,105 C60,85 60,50 60,28"
+                  stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Lower left branch -->
+            <path d="M60,78 C46,68 32,72 24,62"
+                  stroke="#A8C5A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Lower right branch -->
+            <path d="M60,78 C74,68 88,72 96,62"
+                  stroke="#A8C5A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Lower leaves -->
+            <ellipse cx="38" cy="68" rx="13" ry="7" fill="#A8C5A0" opacity="0.8"
+                     transform="rotate(-35 38 68)"/>
+            <ellipse cx="26" cy="63" rx="10" ry="5" fill="#8BBF8B" opacity="0.65"
+                     transform="rotate(-20 26 63)"/>
+            <ellipse cx="82" cy="68" rx="13" ry="7" fill="#A8C5A0" opacity="0.8"
+                     transform="rotate(35 82 68)"/>
+            <ellipse cx="94" cy="63" rx="10" ry="5" fill="#8BBF8B" opacity="0.65"
+                     transform="rotate(20 94 63)"/>
+            <!-- Upper left branch -->
+            <path d="M60,52 C48,43 36,46 30,38"
+                  stroke="#A8C5A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Upper right branch -->
+            <path d="M60,52 C72,43 84,46 90,38"
+                  stroke="#A8C5A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Upper leaves -->
+            <ellipse cx="44" cy="44" rx="10" ry="5.5" fill="#A8C5A0" opacity="0.72"
+                     transform="rotate(-28 44 44)"/>
+            <ellipse cx="76" cy="44" rx="10" ry="5.5" fill="#A8C5A0" opacity="0.72"
+                     transform="rotate(28 76 44)"/>
+            <!-- Small peach blossoms on branch tips -->
+            <circle cx="30" cy="37" r="5" fill="#FFDAB9" opacity="0.7"/>
+            <circle cx="30" cy="37" r="2.5" fill="#F5CBA7" opacity="0.8"/>
+            <circle cx="90" cy="37" r="5" fill="#FFDAB9" opacity="0.7"/>
+            <circle cx="90" cy="37" r="2.5" fill="#F5CBA7" opacity="0.8"/>
+            <!-- Top rose bud -->
+            <circle cx="60" cy="26" r="10" fill="#F8C8DC" opacity="0.5"/>
+            <circle cx="60" cy="26" r="7"  fill="#F4A6B7" opacity="0.7"/>
+            <circle cx="60" cy="26" r="4"  fill="#D96C7E" opacity="0.9"/>
+          </svg>
+        </div>
+
+        <p class="event-label">Third</p>
+        <h2 class="event-name">Upanayanam</h2>
+        <p class="event-subtitle">The Sacred Thread Ceremony</p>
+        <div class="event-divider-line" aria-hidden="true"></div>
+        <!-- EDIT: Update date, time, and venue for Upanayanam -->
+        <p class="event-date">DD Month 2026</p>
+        <p class="event-time">00:00 AM</p>
+        <p class="event-venue">[Venue Name]</p>
+        <p class="event-location">[City, State]</p>
+      </div>
+    </section>
+
+    <!-- ─── EVENT 4: WEDDING ─── -->
+    <section class="event" id="ev-wedding" data-index="3"
+             aria-label="Wedding event details">
+      <canvas class="event-petal-canvas" aria-hidden="true"></canvas>
+
+      <div class="event-content">
+        <!-- SVG: Three-rose bouquet with ribbon -->
+        <div class="event-icon" aria-hidden="true">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stems -->
+            <path d="M48,108 C48,108 50,88 53,72"
+                  stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M60,108 C60,108 60,84 60,66"
+                  stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M72,108 C72,108 70,88 67,72"
+                  stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Ribbon bow left loop -->
+            <path d="M54,97 C44,91 38,100 48,102 C58,104 57,92 54,97Z"
+                  fill="#F8C8DC" opacity="0.85"/>
+            <!-- Ribbon bow right loop -->
+            <path d="M66,97 C76,91 82,100 72,102 C62,104 63,92 66,97Z"
+                  fill="#F8C8DC" opacity="0.85"/>
+            <!-- Ribbon knot -->
+            <ellipse cx="60" cy="99" rx="5" ry="3.5" fill="#D96C7E" opacity="0.75"/>
+            <!-- Ribbon tails -->
+            <path d="M57,101 C54,108 50,112 52,115"
+                  stroke="#F4A6B7" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M63,101 C66,108 70,112 68,115"
+                  stroke="#F4A6B7" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Leaves -->
+            <ellipse cx="44" cy="80" rx="11" ry="5.5" fill="#A8C5A0" opacity="0.75"
+                     transform="rotate(-40 44 80)"/>
+            <ellipse cx="76" cy="80" rx="11" ry="5.5" fill="#A8C5A0" opacity="0.75"
+                     transform="rotate(40 76 80)"/>
+            <ellipse cx="36" cy="66" rx="9"  ry="4.5" fill="#8BBF8B" opacity="0.6"
+                     transform="rotate(-30 36 66)"/>
+            <ellipse cx="84" cy="66" rx="9"  ry="4.5" fill="#8BBF8B" opacity="0.6"
+                     transform="rotate(30 84 66)"/>
+            <!-- Left rose -->
+            <circle cx="44" cy="54" r="14" fill="#F8C8DC" opacity="0.35"/>
+            <circle cx="44" cy="54" r="10" fill="#F4A6B7" opacity="0.55"/>
+            <circle cx="44" cy="54" r="6.5" fill="#D96C7E" opacity="0.78"/>
+            <circle cx="44" cy="54" r="3"   fill="#C2415A" opacity="0.9"/>
+            <!-- Center rose (taller / larger) -->
+            <circle cx="60" cy="44" r="18" fill="#F8C8DC" opacity="0.35"/>
+            <circle cx="60" cy="44" r="13" fill="#F4A6B7" opacity="0.55"/>
+            <circle cx="60" cy="44" r="8"  fill="#D96C7E" opacity="0.8"/>
+            <circle cx="60" cy="44" r="3.5" fill="#C2415A" opacity="0.95"/>
+            <!-- Right rose -->
+            <circle cx="76" cy="54" r="14" fill="#F8C8DC" opacity="0.35"/>
+            <circle cx="76" cy="54" r="10" fill="#F4A6B7" opacity="0.55"/>
+            <circle cx="76" cy="54" r="6.5" fill="#D96C7E" opacity="0.78"/>
+            <circle cx="76" cy="54" r="3"   fill="#C2415A" opacity="0.9"/>
+            <!-- Baby's breath accents -->
+            <circle cx="30" cy="48" r="3"   fill="white" opacity="0.9"/>
+            <circle cx="34" cy="40" r="2"   fill="white" opacity="0.8"/>
+            <circle cx="26" cy="56" r="2"   fill="white" opacity="0.75"/>
+            <circle cx="90" cy="48" r="3"   fill="white" opacity="0.9"/>
+            <circle cx="86" cy="40" r="2"   fill="white" opacity="0.8"/>
+            <circle cx="94" cy="56" r="2"   fill="white" opacity="0.75"/>
+          </svg>
+        </div>
+
+        <p class="event-label">The</p>
+        <h2 class="event-name">Wedding</h2>
+        <p class="event-subtitle">The Grand Celebration of Love</p>
+        <div class="event-divider-line" aria-hidden="true"></div>
+        <!-- EDIT: Update date, time, and venue for the Wedding -->
+        <p class="event-date">15 December 2026</p>
+        <p class="event-time">00:00 AM</p>
+        <p class="event-venue">[Venue Name]</p>
+        <p class="event-location">[City, State]</p>
+      </div>
+    </section>
+
+  <!-- Event dot navigator — fixed right side, shown only during events section -->
+  <nav id="event-dots" aria-label="Jump to event">
+    <button class="dot active" data-index="0" aria-label="Go to Nichayathartham"></button>
+    <button class="dot"        data-index="1" aria-label="Go to Reception"></button>
+    <button class="dot"        data-index="2" aria-label="Go to Upanayanam"></button>
+    <button class="dot"        data-index="3" aria-label="Go to Wedding"></button>
+  </nav>
+
+  <!-- ============================== OUR STORY / GALLERY ============================== -->
+  <section id="story">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Our Journey</p>
+      <h2 class="section-title">A Love Story</h2>
+      <div class="section-divider" aria-hidden="true">
+        <svg viewBox="0 0 220 24" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0"   y1="12" x2="82"  y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.45"/>
+          <path d="M97,12 C95,7 91,5 97,12 C103,19 105,5 97,12Z"  fill="#D96C7E" opacity="0.65"/>
+          <circle cx="110" cy="12" r="3" fill="#C9A96E"/>
+          <path d="M123,12 C121,7 117,5 123,12 C129,19 131,5 123,12Z" fill="#D96C7E" opacity="0.65"/>
+          <line x1="138" y1="12" x2="220" y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.45"/>
+        </svg>
+      </div>
+    </div>
+
+    <!--
+      EDIT: Replace each .gallery-placeholder div with:
+        <img src="assets/gallery-1.jpg" alt="Caption text" loading="lazy" />
+      Make sure to add photos to the /assets/ folder.
+      Recommended size: 800×600px or 4:3 ratio JPEG.
+    -->
+    <div class="gallery-grid" id="gallery">
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 1" data-index="0">
+        <div class="gallery-placeholder"><span>Photo 1</span></div>
+      </div>
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 2" data-index="1">
+        <div class="gallery-placeholder"><span>Photo 2</span></div>
+      </div>
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 3" data-index="2">
+        <div class="gallery-placeholder"><span>Photo 3</span></div>
+      </div>
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 4" data-index="3">
+        <div class="gallery-placeholder"><span>Photo 4</span></div>
+      </div>
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 5" data-index="4">
+        <div class="gallery-placeholder"><span>Photo 5</span></div>
+      </div>
+      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 6" data-index="5">
+        <div class="gallery-placeholder"><span>Photo 6</span></div>
+      </div>
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+      <button id="lightbox-close" aria-label="Close photo viewer">&times;</button>
+      <button id="lightbox-prev"  aria-label="Previous photo">&#8249;</button>
+      <button id="lightbox-next"  aria-label="Next photo">&#8250;</button>
+      <div id="lightbox-content"></div>
+    </div>
+  </section>
+
+  <!-- ============================== RSVP SECTION ============================== -->
+  <section id="rsvp">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Kindly Reply</p>
+      <h2 class="section-title">Will You Join Us?</h2>
+      <div class="section-divider" aria-hidden="true">
+        <svg viewBox="0 0 220 24" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0"   y1="12" x2="82"  y2="12" stroke="#C9A96E" stroke-width="0.8" opacity="0.45"/>
+          <path d="M97,12 C95,7 91,5 97,12 C103,19 105,5 97,12Z"  fill="#C9A96E" opacity="0.65"/>
+          <circle cx="110" cy="12" r="3" fill="#D96C7E"/>
+          <path d="M123,12 C121,7 117,5 123,12 C129,19 131,5 123,12Z" fill="#C9A96E" opacity="0.65"/>
+          <line x1="138" y1="12" x2="220" y2="12" stroke="#C9A96E" stroke-width="0.8" opacity="0.45"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="rsvp-wrapper reveal">
+      <form id="rsvp-form" novalidate autocomplete="on">
+
+        <div class="form-group">
+          <label for="rsvp-name">Your Name</label>
+          <input type="text" id="rsvp-name" name="name"
+                 placeholder="Enter your full name" required
+                 autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="rsvp-guests">Number of Guests</label>
+          <select id="rsvp-guests" name="guests" autocomplete="off">
+            <option value="1">1 person (just me)</option>
+            <option value="2" selected>2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+            <option value="5">5 or more</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Will you be attending?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="attending" value="yes" checked />
+              <span>Joyfully accepts</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="attending" value="no" />
+              <span>Regretfully declines</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rsvp-message">
+            A Note for the Couple
+            <span class="field-optional">(optional)</span>
+          </label>
+          <textarea id="rsvp-message" name="message" rows="3"
+                    placeholder="Share your wishes or a message for the couple…"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Send RSVP &nbsp;✦</button>
+
+        <!--
+        ══════════════════════════════════════════════════════════════════
+        HOW TO CONNECT THIS FORM TO A FREE BACKEND:
+
+        Option A — Formspree (easiest, free up to 50 submissions/month):
+          1. Sign up at https://formspree.io (free)
+          2. Create a new form → copy your unique form ID (e.g. "xabc1234")
+          3. In js/script.js, inside initRSVP(), replace the comment block
+             with a real fetch() call — template already provided there.
+
+        Option B — Google Forms:
+          1. Create a Google Form at https://forms.google.com
+          2. Match field names (name, guests, attending, message)
+          3. Replace this <form> block entirely with the Google Form embed code,
+             or use the pre-filled link approach documented in js/script.js.
+        ══════════════════════════════════════════════════════════════════
+        -->
+      </form>
+
+      <!-- Thank-you card — hidden until form is submitted, revealed by GSAP -->
+      <div id="thankyou-card" aria-live="polite">
+        <div class="thankyou-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" fill="#FDE8EF" stroke="#D96C7E" stroke-width="1.5"/>
+            <path d="M32,22 C32,15 22,12 22,22 C22,32 32,42 32,42 C32,42 42,32 42,22 C42,12 32,15 32,22Z"
+                  fill="#D96C7E" opacity="0.88"/>
+          </svg>
+        </div>
+        <!-- EDIT: Personalise the thank-you message -->
+        <h3 class="thankyou-title">Thank You!</h3>
+        <p class="thankyou-message">
+          We are so grateful for your love and blessings.<br/>
+          We cannot wait to celebrate with you!
+        </p>
+        <p class="thankyou-sig">— Nithesh &amp; Harshitha</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer id="footer">
+    <div class="footer-divider" aria-hidden="true">
+      <svg viewBox="0 0 320 44" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left floral branch -->
+        <path d="M8,22 C28,12 48,16 72,22"
+              stroke="#D96C7E" stroke-width="1" fill="none" opacity="0.45"/>
+        <ellipse cx="38" cy="16" rx="9" ry="5" fill="#A8C5A0" opacity="0.5"
+                 transform="rotate(-20 38 16)"/>
+        <ellipse cx="58" cy="18" rx="8" ry="4.5" fill="#A8C5A0" opacity="0.45"
+                 transform="rotate(-10 58 18)"/>
+        <circle cx="28" cy="20" r="4" fill="#F4A6B7" opacity="0.5"/>
+        <!-- Center rose -->
+        <circle cx="160" cy="22" r="12" fill="#F8C8DC" opacity="0.45"/>
+        <circle cx="160" cy="22" r="8"  fill="#F4A6B7" opacity="0.6"/>
+        <circle cx="160" cy="22" r="5"  fill="#D96C7E" opacity="0.8"/>
+        <circle cx="160" cy="22" r="2.5" fill="#C2415A"/>
+        <!-- Right floral branch -->
+        <path d="M312,22 C292,12 272,16 248,22"
+              stroke="#D96C7E" stroke-width="1" fill="none" opacity="0.45"/>
+        <ellipse cx="282" cy="16" rx="9" ry="5" fill="#A8C5A0" opacity="0.5"
+                 transform="rotate(20 282 16)"/>
+        <ellipse cx="262" cy="18" rx="8" ry="4.5" fill="#A8C5A0" opacity="0.45"
+                 transform="rotate(10 262 18)"/>
+        <circle cx="292" cy="20" r="4" fill="#F4A6B7" opacity="0.5"/>
+        <!-- Connecting dashed lines -->
+        <line x1="82"  y1="22" x2="144" y2="22"
+              stroke="#C9A96E" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.5"/>
+        <line x1="176" y1="22" x2="238" y2="22"
+              stroke="#C9A96E" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <!-- EDIT: Update closing message and names -->
+    <p class="footer-label">With all our love,</p>
+    <p class="footer-names">Nithesh &amp; Harshitha</p>
+    <!-- EDIT: Update wedding date in footer -->
+    <p class="footer-date">15 · December · 2026</p>
+
+    <div class="footer-bottom">
+      <p>Made with <span class="heart" aria-label="love">♥</span> for a beautiful day</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js" defer></script>
+</body>
+</html>
