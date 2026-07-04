@@ -79,7 +79,10 @@
     <div class="hero-content">
 
       <!-- EDIT: Update eyebrow text -->
-      <p class="hero-eyebrow">Together with their families</p>
+      <p class="hero-eyebrow">Together with our families</p>
+
+      <!-- EDIT: Main invitation line -->
+      <p class="hero-invite">we cordially invite you to celebrate our wedding</p>
 
       <h1 class="hero-names" aria-label="Nithesh weds Harshitha">
         <!-- EDIT: Update groom name -->
@@ -100,14 +103,12 @@
         </svg>
       </div>
 
-      <!-- EDIT: Main invitation line -->
-      <p class="hero-invite">cordially invite you to celebrate their wedding</p>
 
       <!-- EDIT: Update romantic tagline -->
       <p class="hero-tagline">Two hearts, one love, a lifetime of happiness</p>
 
       <!-- EDIT: Update wedding date display text -->
-      <p class="hero-date">15 · December · 2026</p>
+      <p class="hero-date">29 &amp; 30 · August · 2026</p>
 
       <!-- Live countdown timer (JS-driven) -->
       <div id="countdown" aria-label="Countdown to the wedding">
@@ -140,6 +141,42 @@
       </div>
 
     </div><!-- .hero-content -->
+  </section>
+
+  <!-- ============================== VENUE / LOCATION ============================== -->
+  <section id="venue">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Venue</p>
+      <h2 class="section-title">Selvamathi Farm Resorts</h2>
+      <div class="section-divider" aria-hidden="true">
+        <svg viewBox="0 0 220 24" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0"   y1="12" x2="82"  y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.45"/>
+          <path d="M97,12 C95,7 91,5 97,12 C103,19 105,5 97,12Z"  fill="#D96C7E" opacity="0.65"/>
+          <circle cx="110" cy="12" r="3" fill="#C9A96E"/>
+          <path d="M123,12 C121,7 117,5 123,12 C129,19 131,5 123,12Z" fill="#D96C7E" opacity="0.65"/>
+          <line x1="138" y1="12" x2="220" y2="12" stroke="#D96C7E" stroke-width="0.8" opacity="0.45"/>
+        </svg>
+      </div>
+    </div>
+    <div class="venue-body reveal">
+      <!-- EDIT: Make sure SFR_layout_map_alone.jpeg is in the assets/ folder -->
+      <div class="location-map-wrap">
+        <img src="assets/SFR_Map.png"
+             alt="Selvamathi Farm Resorts layout map"
+             loading="lazy" />
+      </div>
+      <!-- EDIT: Replace both URLs with your exact Google Maps share link -->
+      <a href="https://www.google.com/maps/search/Selvamathi+Farm+Resorts"
+         target="_blank" rel="noopener noreferrer" class="qr-link"
+         aria-label="Open Google Maps for Selvamathi Farm Resorts">
+        <div class="qr-frame">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FSelvamathi%2BFarm%2BResorts&bgcolor=FFFAF2&color=3D2C2C&qzone=1"
+               alt="QR code — navigate to Selvamathi Farm Resorts"
+               width="90" height="90" loading="lazy" />
+        </div>
+        <span class="qr-label">Tap to navigate &nbsp;&#8594;</span>
+      </a>
+    </div>
   </section>
 
   <!-- ============================== EVENTS SCROLL-SNAP SECTIONS ============================== -->
@@ -208,10 +245,10 @@
         <p class="event-subtitle">The Sacred Engagement</p>
         <div class="event-divider-line" aria-hidden="true"></div>
         <!-- EDIT: Update date, time, and venue for Nichayathartham -->
-        <p class="event-date">DD Month 2026</p>
-        <p class="event-time">00:00 AM</p>
-        <p class="event-venue">[Venue Name]</p>
-        <p class="event-location">[City, State]</p>
+        <p class="event-date">29 August 2026</p>
+        <p class="event-time">12:00 PM</p>
+        <p class="event-venue">Main Hall</p>
+        <!-- <p class="event-location">[City, State]</p> -->
       </div>
     </section>
 
@@ -264,10 +301,10 @@
         <p class="event-subtitle">An Evening of Celebration</p>
         <div class="event-divider-line" aria-hidden="true"></div>
         <!-- EDIT: Update date, time, and venue for Reception -->
-        <p class="event-date">DD Month 2026</p>
-        <p class="event-time">00:00 PM</p>
-        <p class="event-venue">[Venue Name]</p>
-        <p class="event-location">[City, State]</p>
+        <p class="event-date">29 August 2026</p>
+        <p class="event-time">06:00 PM</p>
+        <p class="event-venue">SWAR Lawn</p>
+        <!-- <p class="event-location">[City, State]</p> -->
       </div>
     </section>
 
@@ -326,16 +363,16 @@
         <p class="event-subtitle">The Sacred Thread Ceremony</p>
         <div class="event-divider-line" aria-hidden="true"></div>
         <!-- EDIT: Update date, time, and venue for Upanayanam -->
-        <p class="event-date">DD Month 2026</p>
-        <p class="event-time">00:00 AM</p>
-        <p class="event-venue">[Venue Name]</p>
-        <p class="event-location">[City, State]</p>
+        <p class="event-date">30 August 2026</p>
+        <p class="event-time">04:30 AM</p>
+        <p class="event-venue">Main Hall</p>
+        <!-- <p class="event-location">[City, State]</p> -->
       </div>
     </section>
 
     <!-- ─── EVENT 4: WEDDING ─── -->
     <section class="event" id="ev-wedding" data-index="3"
-             aria-label="Wedding event details">
+             aria-label="Muhurtham event details">
       <canvas class="event-petal-canvas" aria-hidden="true"></canvas>
 
       <div class="event-content">
@@ -397,14 +434,14 @@
         </div>
 
         <p class="event-label">The</p>
-        <h2 class="event-name">Wedding</h2>
+        <h2 class="event-name">Muhurtham</h2>
         <p class="event-subtitle">The Grand Celebration of Love</p>
         <div class="event-divider-line" aria-hidden="true"></div>
         <!-- EDIT: Update date, time, and venue for the Wedding -->
-        <p class="event-date">15 December 2026</p>
-        <p class="event-time">00:00 AM</p>
-        <p class="event-venue">[Venue Name]</p>
-        <p class="event-location">[City, State]</p>
+        <p class="event-date">30 August 2026</p>
+        <p class="event-time">07:30 AM</p>
+        <p class="event-venue">SWAR Lawn</p>
+        <!-- <p class="event-location">[City, State]</p> -->
       </div>
     </section>
 
@@ -413,7 +450,7 @@
     <button class="dot active" data-index="0" aria-label="Go to Nichayathartham"></button>
     <button class="dot"        data-index="1" aria-label="Go to Reception"></button>
     <button class="dot"        data-index="2" aria-label="Go to Upanayanam"></button>
-    <button class="dot"        data-index="3" aria-label="Go to Wedding"></button>
+    <button class="dot"        data-index="3" aria-label="Go to Muhurtham"></button>
   </nav>
 
   <!-- ============================== OUR STORY / GALLERY ============================== -->
@@ -606,7 +643,7 @@
     <p class="footer-label">With all our love,</p>
     <p class="footer-names">Nithesh &amp; Harshitha</p>
     <!-- EDIT: Update wedding date in footer -->
-    <p class="footer-date">15 · December · 2026</p>
+    <p class="footer-date">29 &amp; 30 · August · 2026</p>
 
     <div class="footer-bottom">
       <p>Made with <span class="heart" aria-label="love">♥</span> for a beautiful day</p>

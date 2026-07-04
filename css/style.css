@@ -346,11 +346,13 @@ input, select, textarea {
 
 .hero-invite {
   font-family: var(--font-display);
-  font-size: clamp(0.82rem, 2.2vw, 1rem);
-  font-weight: 300;
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
+  font-weight: 400;
   font-style: italic;
-  color: var(--text-mid);
-  margin-bottom: 0.5rem;
+  color: var(--rose-mid);
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  margin-bottom: 1.1rem;
   opacity: 0; /* animated by GSAP */
 }
 
@@ -365,11 +367,10 @@ input, select, textarea {
 }
 
 .hero-date {
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.2em;
   color: var(--gold);
   margin-bottom: 1.6rem;
   opacity: 0;
@@ -436,6 +437,105 @@ input, select, textarea {
   height: 26px;
   stroke: var(--rose-mid);
   animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ================================================================
+   6b. LOCATION SLIDE — venue name, estate map, QR code
+   ================================================================ */
+.location-name {
+  font-family: var(--font-script);
+  font-size: clamp(1.6rem, 6.5vw, 2.6rem);
+  color: var(--text-dark);
+  line-height: 1.15;
+  margin-bottom: 0.4rem;
+}
+
+.location-map-wrap {
+  width: 100%;
+  max-width: 380px;
+  margin: 0.5rem auto 0.7rem;
+}
+
+.location-map-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.qr-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.4rem 1rem 0.4rem 0.5rem;
+  border-radius: 30px;
+  border: 1.5px solid var(--blush);
+  background: white;
+  box-shadow: 0 2px 12px rgba(217,108,126,0.1);
+  transition: var(--transition);
+  touch-action: manipulation;
+}
+
+.qr-link:hover,
+.qr-link:active {
+  border-color: var(--rose-mid);
+  box-shadow: 0 4px 18px rgba(217,108,126,0.2);
+}
+
+.qr-frame {
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #FFFAF2;
+  padding: 4px;
+}
+
+.qr-frame img { display: block; border-radius: 4px; }
+
+.qr-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 2vw, 0.92rem);
+  font-style: italic;
+  color: var(--rose-mid);
+  font-weight: 400;
+}
+
+/* ── Estate Map Animations ── */
+.map-element { opacity: 0; }
+.map-pin     { opacity: 0; }
+
+.event-content.visible .map-border-path {
+  animation: drawMapBorder 1.6s ease forwards 0.3s;
+}
+.event-content.visible .map-el-1 { animation: mapFadeIn 0.4s ease forwards 0.65s; }
+.event-content.visible .map-el-2 { animation: mapFadeIn 0.4s ease forwards 0.8s;  }
+.event-content.visible .map-el-3 { animation: mapFadeIn 0.4s ease forwards 0.95s; }
+.event-content.visible .map-el-4 { animation: mapFadeIn 0.4s ease forwards 1.05s; }
+.event-content.visible .map-el-5 { animation: mapFadeIn 0.4s ease forwards 1.1s;  }
+.event-content.visible .map-el-6 { animation: mapFadeIn 0.4s ease forwards 1.15s; }
+.event-content.visible .map-el-7 { animation: mapFadeIn 0.4s ease forwards 1.2s;  }
+.event-content.visible .map-el-8 { animation: mapFadeIn 0.4s ease forwards 1.25s; }
+.event-content.visible .map-el-9 { animation: mapFadeIn 0.4s ease forwards 1.3s;  }
+.event-content.visible .map-pin-1 {
+  animation: mapPinDrop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards 1.5s;
+}
+.event-content.visible .map-pin-2 {
+  animation: mapPinDrop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards 1.65s;
+}
+
+@keyframes drawMapBorder { to { stroke-dashoffset: 0; } }
+
+@keyframes mapFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes mapPinDrop {
+  0%   { opacity: 0; transform: translateY(-14px); }
+  60%  { opacity: 1; transform: translateY(3px);   }
+  100% { opacity: 1; transform: translateY(0);     }
 }
 
 /* ================================================================
@@ -709,6 +809,39 @@ input, select, textarea {
   opacity: 1;
   outline: none;
   transform: scale(1.2);
+}
+
+/* ================================================================
+   9b. VENUE / LOCATION SECTION
+   ================================================================ */
+#venue {
+  padding: var(--space-xl) var(--space-sm) var(--space-lg);
+  background: linear-gradient(to bottom,
+    var(--ivory) 0%,
+    var(--blush-light) 50%,
+    var(--ivory) 100%);
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+}
+
+#venue::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right,
+    transparent, var(--gold), var(--rose), var(--gold), transparent);
+}
+
+.venue-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 /* ================================================================
@@ -1214,6 +1347,8 @@ textarea {
   #rsvp-form { padding: 2.4rem 2rem 2.6rem; }
 
   .radio-group { flex-wrap: nowrap; }
+
+  .location-map-wrap { max-width: 560px; }
 }
 
 /* ================================================================
@@ -1233,6 +1368,54 @@ textarea {
   .gallery-item:focus-visible {
     outline: 3px solid var(--rose-mid);
     outline-offset: 3px;
+  }
+
+  /* Venue — fixed to one viewport height; map + QR side-by-side */
+  #venue {
+    min-height: unset;
+    height: 100vh;
+    height: 100dvh;
+    padding: 1.5rem var(--space-sm) 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #venue .section-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .venue-body {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .venue-body .location-map-wrap {
+    flex: 1;
+    max-width: none;
+    margin: 0;
+  }
+
+  /* Cap map height so it never pushes outside the viewport */
+  .venue-body .location-map-wrap img {
+    max-height: 80vh;
+  }
+
+  .venue-body .qr-link {
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 0.5rem;
+    padding: 1rem 0.8rem;
+  }
+
+  .venue-body .qr-frame img {
+    width: 140px;
+    height: 140px;
   }
 }
 

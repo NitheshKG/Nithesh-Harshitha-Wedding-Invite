@@ -27,10 +27,10 @@
 const CONFIG = {
   /**
    * EDIT: Set the wedding date and time.
-   * Format: 'YYYY-MM-DDTHH:MM:SS'  (local time of wedding venue)
-   * Example below is 15 December 2026, 9:00 AM.
+   * Using explicit IST offset (+05:30) so the countdown is correct
+   * regardless of the timezone of the device opening the page.
    */
-  weddingDate: new Date('2026-12-15T09:00:00'),
+  weddingDate: new Date('2026-08-29T09:00:00+05:30'),
 
   /** Number of floating petals on the hero canvas */
   heroPetalCount: 28,
@@ -267,6 +267,10 @@ function initHeroAnimation() {
       { opacity: 1, y: 0, duration: 0.6 },
       0.25
     )
+    .to('.hero-invite',
+      { opacity: 1, y: 0, duration: 0.5 },
+      '-=0.05'
+    )
     .to('.hero-name--groom .letter-span',
       { opacity: 1, y: 0, rotateX: 0, duration: 0.75, stagger: 0.038 },
       '-=0.1'
@@ -282,10 +286,6 @@ function initHeroAnimation() {
     .to('.hero-divider',
       { opacity: 1, y: 0, duration: 0.55 },
       '-=0.2'
-    )
-    .to('.hero-invite',
-      { opacity: 1, y: 0, duration: 0.6 },
-      '-=0.15'
     )
     .to('.hero-tagline',
       { opacity: 1, y: 0, duration: 0.6 },
@@ -421,6 +421,7 @@ function initEventSections() {
   const inView = new Set();
 
   // ── Entrance directions per event index (alternating left / right) ──
+  // alternating left / right entrance per event
   const xFrom = [-65, 65, -65, 65];
 
   sections.forEach((section, i) => {
@@ -434,12 +435,13 @@ function initEventSections() {
       const pc = petalMap.get(section);
 
       if (entry.isIntersecting) {
-        // Animate content in
+        // Animate content in + add .visible so CSS map animations trigger
         gsap.to(content, {
           opacity: 1, x: 0, y: 0,
           duration: 0.9, ease: 'power3.out',
           clearProps: 'transform',
         });
+        content.classList.add('visible');
         updateDots(i);
         if (pc) pc.start();
         inView.add(i);
@@ -449,6 +451,7 @@ function initEventSections() {
         // Reset so the animation replays on next visit
         gsap.killTweensOf(content);
         gsap.set(content, { opacity: 0, x: xFrom[i], y: 18 });
+        content.classList.remove('visible');
         if (pc) pc.stop();
         inView.delete(i);
         if (inView.size === 0) dotsNav.classList.remove('visible');
