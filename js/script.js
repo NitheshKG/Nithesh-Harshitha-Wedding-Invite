@@ -588,6 +588,40 @@ function initStoryDeck() {
   var current  = 0;
   var isAnimating = false;
 
+  /* ── Autoplay ── */
+  var AUTOPLAY_MS = 5000;
+  var autoTimer   = null;
+
+  deck.style.setProperty('--autoplay-dur', AUTOPLAY_MS + 'ms');
+
+  function startFill(idx) {
+    var seg = segments[idx];
+    if (!seg) return;
+    seg.classList.remove('filling');
+    seg.offsetWidth; // eslint-disable-line no-unused-expressions
+    seg.classList.add('filling');
+  }
+
+  function clearFill(idx) {
+    if (segments[idx]) segments[idx].classList.remove('filling');
+  }
+
+  function startAutoplay() {
+    clearTimeout(autoTimer);
+    clearFill(current);
+    if (current >= TOTAL - 1) return;
+    startFill(current);
+    autoTimer = setTimeout(function() {
+      goTo(current + 1, 'next');
+    }, AUTOPLAY_MS);
+  }
+
+  function stopAutoplay() {
+    clearTimeout(autoTimer);
+    autoTimer = null;
+    clearFill(current);
+  }
+
   /* Touch tracking */
   var touchStartX = 0;
   var touchStartY = 0;
@@ -608,6 +642,10 @@ function initStoryDeck() {
   function goTo(index, direction) {
     if (isAnimating || index < 0 || index >= TOTAL || index === current) return;
     isAnimating = true;
+
+    /* Cancel any running autoplay timer and fill animation */
+    clearTimeout(autoTimer);
+    clearFill(current);
 
     var outgoing = slides[current];
     var incoming = slides[index];
@@ -645,6 +683,7 @@ function initStoryDeck() {
       incoming.style.opacity   = '';
       incoming.style.transform = '';
       isAnimating = false;
+      startAutoplay();
     }, 420);
   }
 
@@ -689,6 +728,7 @@ function initStoryDeck() {
 
   function openLightbox(index) {
     if (!lightbox) return;
+    stopAutoplay();
     current = index;
     buildLbImg(index);
     lightbox.style.display = 'flex';
@@ -714,6 +754,7 @@ function initStoryDeck() {
       slide.style.transition = '';
     });
     deck.focus();
+    startAutoplay();
   }
 
   /* Tap anywhere on deck (not on tap-zones or expand) → open lightbox */
@@ -772,6 +813,22 @@ function initStoryDeck() {
     }
   });
 
+  /* ── Start autoplay when deck is in view; pause when scrolled away ── */
+  if ('IntersectionObserver' in window) {
+    var deckObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          startAutoplay();
+        } else {
+          stopAutoplay();
+        }
+      });
+    }, { threshold: 0.5 });
+    deckObs.observe(deck);
+  } else {
+    startAutoplay();
+  }
+
   /* ── Initialise ── */
   updateUI();
 }
@@ -791,41 +848,53 @@ function initMusicToggle() {
 
   let playing = false;
 
-  /* Attempt autoplay as soon as the page is ready.
-     Modern browsers require a prior user-gesture, so this may be
-     silently blocked — the catch simply leaves the button in its
-     default "not playing" state and the visitor can tap to start. */
+  function startMusic() {
+    audio.play().catch(() => {
+      console.info(
+        'Music note: no audio file detected. ' +
+        'Add an mp3 to assets/ and update the <audio> src in index.html.'
+      );
+    });
+    playing = true;
+    iconMusic.style.display = '';
+    iconMute.style.display  = 'none';
+    btn.setAttribute('aria-label', 'Pause background music');
+  }
+
+  function stopMusic() {
+    audio.pause();
+    playing = false;
+    iconMusic.style.display = 'none';
+    iconMute.style.display  = '';
+    btn.setAttribute('aria-label', 'Play background music');
+  }
+
+  /* Attempt autoplay on page load — silently ignored if browser blocks it */
   audio.play().then(() => {
     playing = true;
     iconMusic.style.display = '';
     iconMute.style.display  = 'none';
     btn.setAttribute('aria-label', 'Pause background music');
-  }).catch(() => {
-    /* Autoplay blocked — do nothing; icon stays in muted state */
+  }).catch(() => { /* blocked — first click anywhere will start it */ });
+
+  /* Any click anywhere on the page starts music (if not already playing).
+     The button uses stopPropagation so its own handler runs exclusively. */
+  document.addEventListener('click', function() {
+    if (!playing) startMusic();
   });
 
-  btn.addEventListener('click', () => {
+  /* Music button: stop if playing (only way to stop), start if not.
+     stopPropagation prevents the document handler above from also firing. */
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
     if (playing) {
-      audio.pause();
-      playing = false;
-      iconMusic.style.display = 'none'; /* hide music note */
-      iconMute.style.display  = '';     /* show crossed icon — not playing */
-      btn.setAttribute('aria-label', 'Play background music');
+      stopMusic();
     } else {
-      audio.play().catch(() => {
-        console.info(
-          'Music note: no audio file detected. ' +
-          'Add an mp3 to assets/ and update the <audio> src in index.html.'
-        );
-      });
-      playing = true;
-      iconMusic.style.display = '';     /* show music note — now playing */
-      iconMute.style.display  = 'none'; /* hide crossed icon */
-      btn.setAttribute('aria-label', 'Pause background music');
+      startMusic();
     }
   });
 
-  // If audio ends unexpectedly, revert to the "not playing" (muted) icon
+  /* Revert to muted icon if audio ends unexpectedly */
   audio.addEventListener('ended', () => {
     playing = false;
     iconMusic.style.display = 'none';

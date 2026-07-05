@@ -994,13 +994,35 @@ input, select, textarea {
   height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.3);
-  -webkit-transition: background 0.25s ease;
-  transition: background 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.story-segment.past,
-.story-segment.active {
+/* Fill overlay — scaleX from 0 (empty) to 1 (full) */
+.story-segment::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
   background: rgba(255, 255, 255, 0.92);
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+}
+
+/* Past and manually-active segments show full fill immediately */
+.story-segment.past::after,
+.story-segment.active::after {
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+/* Autoplay: animate the active segment's fill progressively */
+.story-segment.active.filling::after {
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-animation: storySegmentFill var(--autoplay-dur, 5s) linear forwards;
+  animation: storySegmentFill var(--autoplay-dur, 5s) linear forwards;
 }
 
 /* — Photo track & slides — */
@@ -1282,6 +1304,14 @@ input, select, textarea {
 /* ================================================================
    14. KEYFRAME ANIMATIONS
    ================================================================ */
+
+/* Story segment autoplay fill */
+@-webkit-keyframes storySegmentFill {
+  to { -webkit-transform: scaleX(1); transform: scaleX(1); }
+}
+@keyframes storySegmentFill {
+  to { transform: scaleX(1); }
+}
 
 /* Scroll indicator bounce */
 @keyframes scrollBounce {
