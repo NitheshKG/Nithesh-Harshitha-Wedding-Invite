@@ -50,6 +50,162 @@
 </head>
 <body>
 
+  <!-- ============================== INVITATION COVER PAGE ============================== -->
+  <!--
+    This full-screen cover is the first thing visitors see.
+    Clicking / tapping anywhere (or pressing Enter on the button) splits it open
+    to reveal the main wedding invitation behind.
+  -->
+  <div id="cover-page" role="dialog" aria-modal="true"
+       aria-label="Wedding invitation cover — click to open">
+
+    <!-- Falling petals (same PetalCanvas system as the hero) -->
+    <canvas id="cover-petal-canvas" aria-hidden="true"></canvas>
+
+    <!-- Split-reveal panels (top half slides up, bottom half slides down on dismiss) -->
+    <div class="cover-panel cover-panel--top"    aria-hidden="true"></div>
+    <div class="cover-panel cover-panel--bottom" aria-hidden="true"></div>
+
+    <!-- Ornate floral corner decorations -->
+    <div class="cover-corner cover-corner--tl" aria-hidden="true"></div>
+    <div class="cover-corner cover-corner--tr" aria-hidden="true"></div>
+    <div class="cover-corner cover-corner--bl" aria-hidden="true"></div>
+    <div class="cover-corner cover-corner--br" aria-hidden="true"></div>
+
+    <!-- All text / decorative content -->
+    <div class="cover-inner">
+
+      <!-- Top botanical ornament -->
+      <div class="cover-ornament-top" aria-hidden="true">
+        <svg viewBox="0 0 200 54" xmlns="http://www.w3.org/2000/svg">
+          <!-- Left branch -->
+          <path d="M10,40 C30,28 54,22 88,28"
+                stroke="#A8C5A0" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.78"/>
+          <ellipse cx="32" cy="28" rx="11" ry="5.5" fill="#A8C5A0" opacity="0.55"
+                   transform="rotate(-22 32 28)"/>
+          <ellipse cx="58" cy="22" rx="9" ry="4.5" fill="#A8C5A0" opacity="0.48"
+                   transform="rotate(-10 58 22)"/>
+          <ellipse cx="14" cy="37" rx="7" ry="3.5" fill="#8BBF8B" opacity="0.45"
+                   transform="rotate(-35 14 37)"/>
+          <circle cx="11" cy="39" r="4.5" fill="#F8C8DC" opacity="0.52"/>
+          <circle cx="11" cy="39" r="3"   fill="#F4A6B7" opacity="0.7"/>
+          <circle cx="11" cy="39" r="1.5" fill="#D96C7E" opacity="0.88"/>
+          <!-- Right branch (mirror) -->
+          <path d="M190,40 C170,28 146,22 112,28"
+                stroke="#A8C5A0" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.78"/>
+          <ellipse cx="168" cy="28" rx="11" ry="5.5" fill="#A8C5A0" opacity="0.55"
+                   transform="rotate(22 168 28)"/>
+          <ellipse cx="142" cy="22" rx="9" ry="4.5" fill="#A8C5A0" opacity="0.48"
+                   transform="rotate(10 142 22)"/>
+          <ellipse cx="186" cy="37" rx="7" ry="3.5" fill="#8BBF8B" opacity="0.45"
+                   transform="rotate(35 186 37)"/>
+          <circle cx="189" cy="39" r="4.5" fill="#F8C8DC" opacity="0.52"/>
+          <circle cx="189" cy="39" r="3"   fill="#F4A6B7" opacity="0.7"/>
+          <circle cx="189" cy="39" r="1.5" fill="#D96C7E" opacity="0.88"/>
+          <!-- Center rose -->
+          <circle cx="100" cy="22" r="13" fill="#F8C8DC" opacity="0.35"/>
+          <circle cx="100" cy="22" r="9"  fill="#F4A6B7" opacity="0.58"/>
+          <circle cx="100" cy="22" r="5.5" fill="#D96C7E" opacity="0.82"/>
+          <circle cx="100" cy="22" r="2.5" fill="#C2415A" opacity="0.95"/>
+          <!-- Stem down -->
+          <line x1="100" y1="35" x2="100" y2="52"
+                stroke="#A8C5A0" stroke-width="1" opacity="0.45" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="cover-eyebrow">Together with their families</p>
+
+      <p class="cover-invite">
+        joyfully request the pleasure of your company<br>
+        at the auspicious wedding of
+      </p>
+
+      <!-- Couple names -->
+      <div class="cover-names-wrap" aria-label="Nithesh weds Harshitha">
+        <span class="cover-name cover-name--groom" aria-hidden="true">Nithesh</span>
+        <div class="cover-amp-row" aria-hidden="true">
+          <div class="cover-amp-line"></div>
+          <svg class="cover-amp-svg" viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="15" cy="25" rx="9" ry="4.5" fill="#A8C5A0" opacity="0.48"
+                     transform="rotate(-28 15 25)"/>
+            <ellipse cx="49" cy="25" rx="9" ry="4.5" fill="#A8C5A0" opacity="0.48"
+                     transform="rotate(28 49 25)"/>
+            <text x="32" y="38" text-anchor="middle"
+                  font-family="'Cormorant Garamond',Georgia,serif"
+                  font-size="28" fill="#C9A96E" font-style="italic" opacity="0.92">&amp;</text>
+          </svg>
+          <div class="cover-amp-line"></div>
+        </div>
+        <span class="cover-name cover-name--bride" aria-hidden="true">Harshitha</span>
+      </div>
+
+      <!-- Decorative floral divider -->
+      <div class="cover-divider" aria-hidden="true">
+        <svg viewBox="0 0 270 22" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0"   y1="11" x2="104" y2="11"
+                stroke="#C9A96E" stroke-width="0.7" opacity="0.38"/>
+          <path d="M117,11 C115,5 111,4 117,11 C123,18 125,4 117,11Z"
+                fill="#D96C7E" opacity="0.58"/>
+          <circle cx="135" cy="11" r="3.5" fill="#C9A96E"/>
+          <path d="M153,11 C151,5 147,4 153,11 C159,18 161,4 153,11Z"
+                fill="#D96C7E" opacity="0.58"/>
+          <line x1="166" y1="11" x2="270" y2="11"
+                stroke="#C9A96E" stroke-width="0.7" opacity="0.38"/>
+        </svg>
+      </div>
+
+      <p class="cover-date">29 &amp; 30 &middot; August &middot; 2026</p>
+      <p class="cover-venue">Selvamathi Farm Resorts</p>
+
+      <!-- Wax-seal open button -->
+      <button class="cover-open-btn" id="cover-open"
+              aria-label="Open the invitation">
+        <span class="cover-seal" aria-hidden="true">
+          <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer soft glow -->
+            <circle cx="44" cy="44" r="43" fill="#FDE8EF" opacity="0.55"/>
+            <!-- Main seal disk -->
+            <circle cx="44" cy="44" r="36" fill="#C2415A"/>
+            <circle cx="44" cy="44" r="36" fill="url(#coverSealGrad)"/>
+            <defs>
+              <radialGradient id="coverSealGrad" cx="40%" cy="36%" r="65%">
+                <stop offset="0%"   stop-color="#D96C7E"/>
+                <stop offset="100%" stop-color="#B03050"/>
+              </radialGradient>
+            </defs>
+            <!-- Dashed inner ring -->
+            <circle cx="44" cy="44" r="29" fill="none"
+                    stroke="#FFFAF9" stroke-width="0.8"
+                    stroke-dasharray="3 2.5" opacity="0.5"/>
+            <!-- Petal rays -->
+            <g opacity="0.28" fill="#FFFAF9">
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(45 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(90 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(135 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(180 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(225 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(270 44 44)"/>
+              <ellipse cx="44" cy="12" rx="2.8" ry="5.5" transform="rotate(315 44 44)"/>
+            </g>
+            <!-- Monogram -->
+            <text x="44" y="41" text-anchor="middle"
+                  font-family="'Cormorant Garamond',Georgia,serif"
+                  font-size="13" font-style="italic" fill="#FFFAF9" opacity="0.9">N &amp; H</text>
+            <!-- Small rose under monogram -->
+            <circle cx="44" cy="54" r="4"   fill="#F8C8DC" opacity="0.35"/>
+            <circle cx="44" cy="54" r="2.8" fill="#F4A6B7" opacity="0.5"/>
+            <circle cx="44" cy="54" r="1.6" fill="#FFFAF9" opacity="0.7"/>
+          </svg>
+        </span>
+        <span class="cover-btn-label">Open Invitation</span>
+      </button>
+
+      <p class="cover-tap-hint" aria-hidden="true">or tap anywhere to open</p>
+
+    </div><!-- .cover-inner -->
+  </div><!-- #cover-page -->
+
   <!-- ============================== SCROLL PROGRESS BAR ============================== -->
   <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
 

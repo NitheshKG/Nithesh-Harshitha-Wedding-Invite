@@ -169,6 +169,331 @@ input, select, textarea {
 }
 
 /* ================================================================
+   4-A. COVER PAGE
+   Full-screen invitation cover shown before the main content.
+   Split-panel reveal: top panel slides up, bottom slides down
+   when the visitor clicks/taps, exposing the hero behind.
+   ================================================================ */
+
+/* Lock page scroll while cover is active */
+html.cover-active,
+html.cover-active body {
+  overflow: hidden !important;
+  scroll-snap-type: none !important;
+}
+
+#cover-page {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* entrance */
+  animation: coverReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes coverReveal {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* Double inset frame lines */
+#cover-page::before,
+#cover-page::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.3s ease;
+}
+#cover-page::before { inset: 16px; border: 1px solid rgba(201,169,110,0.38); }
+#cover-page::after  { inset: 23px; border: 0.5px solid rgba(201,169,110,0.18); }
+
+/* ── Split reveal panels ──
+   The cover background is split into two halves.
+   On dismiss the top slides up and bottom slides down. */
+.cover-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 10%, #FFF0E8 0%, #FFFAF9 55%, #FFF5F2 100%);
+  transition: transform 0.92s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.cover-panel--top    { top: 0;    height: 51%; transform-origin: top center; }
+.cover-panel--bottom { bottom: 0; height: 51%; transform-origin: bottom center; }
+
+#cover-page.cover--closing .cover-panel--top    { transform: translateY(-101%); }
+#cover-page.cover--closing .cover-panel--bottom { transform: translateY(101%); }
+
+/* ── Petal canvas ── */
+#cover-petal-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.35s ease;
+}
+
+/* ── Corner ornaments ── */
+.cover-corner {
+  position: absolute;
+  width:  140px;
+  height: 140px;
+  opacity: 0.48;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity 0.3s ease;
+}
+.cover-corner--tl,
+.cover-corner--tr,
+.cover-corner--bl,
+.cover-corner--br {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M4,4 C4,4 32,4 48,22 C64,40 62,64 46,78' stroke='%23D96C7E' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M4,4 C4,4 4,32 22,48 C40,64 64,62 78,46' stroke='%23D96C7E' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='24' r='11' fill='%23F8C8DC' opacity='0.5'/%3E%3Ccircle cx='24' cy='24' r='7' fill='%23F4A6B7' opacity='0.65'/%3E%3Ccircle cx='24' cy='24' r='4' fill='%23D96C7E' opacity='0.8'/%3E%3Cellipse cx='40' cy='13' rx='7' ry='10' fill='%23A8C5A0' opacity='0.55' transform='rotate(22 40 13)'/%3E%3Cellipse cx='13' cy='40' rx='7' ry='10' fill='%23A8C5A0' opacity='0.55' transform='rotate(68 13 40)'/%3E%3Cellipse cx='34' cy='8' rx='4' ry='7' fill='%23F4A6B7' opacity='0.4' transform='rotate(10 34 8)'/%3E%3Cellipse cx='8' cy='34' rx='4' ry='7' fill='%23F4A6B7' opacity='0.4' transform='rotate(80 8 34)'/%3E%3C/svg%3E");
+}
+.cover-corner--tl { top: 0;    left: 0;  }
+.cover-corner--tr { top: 0;    right: 0; transform: scaleX(-1);   }
+.cover-corner--bl { bottom: 0; left: 0;  transform: scaleY(-1);   }
+.cover-corner--br { bottom: 0; right: 0; transform: scale(-1,-1); }
+
+/* ── Main content container ── */
+.cover-inner {
+  position: relative;
+  z-index: 7;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  padding: 2rem 1.8rem 1.4rem;
+  max-width: 500px;
+  width: 100%;
+  pointer-events: none;   /* clicks fall through to #cover-page */
+  transition: opacity 0.32s ease;
+}
+
+/* Re-enable pointer events on the button only */
+.cover-open-btn { pointer-events: auto; }
+
+/* ── Top botanical ornament ── */
+.cover-ornament-top svg {
+  width: min(190px, 60vw);
+  height: auto;
+  display: block;
+  margin: 0 auto 0.9rem;
+  animation: cvRise 1.1s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* ── Shared staggered entrance ── */
+@keyframes cvRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.cover-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.55rem;
+  animation: cvRise 1.1s 0.55s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.cover-invite {
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 2.2vw, 0.95rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-mid);
+  line-height: 1.85;
+  margin-bottom: 1.0rem;
+  animation: cvRise 1.1s 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* ── Names ── */
+.cover-names-wrap {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 0.8rem;
+  animation: cvRise 1.3s 0.82s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.cover-name {
+  font-family: var(--font-script);
+  font-size: clamp(3.2rem, 14vw, 6.2rem);
+  color: var(--text-dark);
+  line-height: 1.25;
+  overflow: visible;
+  display: block;
+}
+
+/* The "& " row between the names */
+.cover-amp-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin: -0.15em 0;
+  width: 100%;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.cover-amp-line {
+  height: 1px;
+  width: clamp(40px, 12vw, 70px);
+  background: linear-gradient(to right, transparent, rgba(201,169,110,0.4), transparent);
+}
+
+.cover-amp-svg {
+  width: clamp(44px, 13vw, 64px);
+  height: auto;
+  flex-shrink: 0;
+}
+
+/* ── Divider ── */
+.cover-divider {
+  animation: cvRise 1.1s 1.05s cubic-bezier(0.16,1,0.3,1) both;
+}
+.cover-divider svg {
+  width: min(270px, 76vw);
+  height: auto;
+  display: block;
+  margin: 0 auto 0.7rem;
+}
+
+/* ── Date & Venue ── */
+.cover-date {
+  font-family: var(--font-display);
+  font-size: clamp(0.88rem, 2.6vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--text-mid);
+  margin-bottom: 0.28rem;
+  animation: cvRise 1.1s 1.15s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.cover-venue {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  animation: cvRise 1.1s 1.25s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* ── Wax-seal open button ── */
+.cover-open-btn {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 0.65rem;
+  background: none;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  animation: cvRise 1.1s 1.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.cover-seal {
+  display: block;
+  width: clamp(72px, 18vw, 92px);
+  height: clamp(72px, 18vw, 92px);
+  filter: drop-shadow(0 4px 18px rgba(194, 65, 90, 0.45));
+  animation: sealPulse 2.8s 2.6s ease-in-out infinite;
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+.cover-open-btn:hover  .cover-seal,
+.cover-open-btn:focus-visible .cover-seal {
+  transform: scale(1.1);
+  filter: drop-shadow(0 6px 24px rgba(194, 65, 90, 0.6));
+}
+.cover-open-btn:active .cover-seal { transform: scale(0.96); }
+
+.cover-seal svg { width: 100%; height: 100%; }
+
+@keyframes sealPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.07); }
+}
+
+.cover-btn-label {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  transition: color 0.2s ease;
+}
+.cover-open-btn:hover  .cover-btn-label,
+.cover-open-btn:focus-visible .cover-btn-label { color: var(--rose-mid); }
+
+.cover-tap-hint {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-style: italic;
+  color: var(--text-light);
+  opacity: 0.65;
+  margin-top: 0.4rem;
+  animation: cvRise 1.1s 1.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* ── Closing state ── */
+#cover-page.cover--closing::before,
+#cover-page.cover--closing::after  { opacity: 0; }
+#cover-page.cover--closing #cover-petal-canvas { opacity: 0; }
+#cover-page.cover--closing .cover-corner { opacity: 0; }
+#cover-page.cover--closing .cover-inner  { opacity: 0; }
+
+/* ── Tablet & desktop adjustments ── */
+@media (min-width: 600px) {
+  #cover-page::before { inset: 22px; }
+  #cover-page::after  { inset: 30px; }
+  .cover-corner       { width: 170px; height: 170px; }
+  .cover-inner        { padding: 2.5rem 3.5rem 2rem; max-width: 560px; }
+}
+
+/* ── Reduced-motion: skip split animation ── */
+@media (prefers-reduced-motion: reduce) {
+  .cover-panel { transition: none; }
+  #cover-page.cover--closing .cover-panel--top,
+  #cover-page.cover--closing .cover-panel--bottom { transform: none; opacity: 0; transition: opacity 0.4s ease; }
+  #cover-page.cover--closing .cover-inner { transition: opacity 0.4s ease; }
+}
+
+/* ================================================================
    4. SCROLL PROGRESS BAR
    ================================================================ */
 #progress-bar {

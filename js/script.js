@@ -21,6 +21,62 @@
  */
 
 /* ================================================================
+   0. COVER PAGE
+   Full-screen invitation cover shown before the main content.
+   Clicking / tapping anywhere (or pressing Enter/Space on the
+   open button) triggers a split-panel reveal that slides the top
+   half up and the bottom half down, exposing the hero behind.
+   ================================================================ */
+function initCoverPage() {
+  var cover = document.getElementById('cover-page');
+  if (!cover) return;
+
+  // Prevent page from scrolling or snapping while cover is visible
+  document.documentElement.classList.add('cover-active');
+
+  // Kick off floating petals on the cover canvas
+  var coverCanvas = document.getElementById('cover-petal-canvas');
+  var coverPetals = null;
+  if (coverCanvas) {
+    var coverPetalCount = isLowEndDevice() ? 10 : 20;
+    coverPetals = new PetalCanvas(coverCanvas, coverPetalCount);
+    coverPetals.start();
+  }
+
+  var dismissed = false;
+
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+
+    // Kick off the split-panel animation
+    cover.classList.add('cover--closing');
+
+    // After the longest transition (panels: ~0.92 s), clean up
+    setTimeout(function() {
+      cover.remove();
+      if (coverPetals) coverPetals.destroy();
+      document.documentElement.classList.remove('cover-active');
+    }, 980);
+  }
+
+  // Click anywhere on the cover to open
+  cover.addEventListener('click', dismiss);
+
+  // Keyboard: Enter or Space on the button, Escape anywhere
+  cover.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+      e.preventDefault();
+      dismiss();
+    }
+  });
+
+  // Focus the open button for keyboard users
+  var openBtn = document.getElementById('cover-open');
+  if (openBtn) openBtn.focus({ preventScroll: true });
+}
+
+/* ================================================================
    1. CONFIG — EDIT THIS SECTION
    ================================================================ */
 
@@ -906,6 +962,9 @@ function initMusicToggle() {
    14. BOOT — runs when the DOM is fully parsed
    ================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+
+  // ── 0. Invitation cover page (shown first; dismissed on click) ──
+  initCoverPage();
 
   // ── 1. Hero entrance animation (GSAP) ──
   initHeroAnimation();
