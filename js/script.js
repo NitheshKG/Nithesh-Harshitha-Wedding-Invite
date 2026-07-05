@@ -906,40 +906,45 @@ function initMusicToggle() {
 
   let playing = false;
 
+  /* Attempt autoplay as soon as the page is ready.
+     Modern browsers require a prior user-gesture, so this may be
+     silently blocked — the catch simply leaves the button in its
+     default "not playing" state and the visitor can tap to start. */
+  audio.play().then(() => {
+    playing = true;
+    iconMusic.style.display = '';
+    iconMute.style.display  = 'none';
+    btn.setAttribute('aria-label', 'Pause background music');
+  }).catch(() => {
+    /* Autoplay blocked — do nothing; icon stays in muted state */
+  });
+
   btn.addEventListener('click', () => {
     if (playing) {
       audio.pause();
       playing = false;
-      iconMusic.style.display = '';
-      iconMute.style.display  = 'none';
+      iconMusic.style.display = 'none'; /* hide music note */
+      iconMute.style.display  = '';     /* show crossed icon — not playing */
       btn.setAttribute('aria-label', 'Play background music');
     } else {
       audio.play().catch(() => {
-        /**
-         * This catch fires when no audio file is present.
-         * EDIT: Add assets/background-music.mp3 to enable music.
-         * Free royalty-free wedding music sources:
-         *   - https://pixabay.com/music/search/wedding/
-         *   - https://freemusicarchive.org
-         */
         console.info(
           'Music note: no audio file detected. ' +
-          'Add a file at assets/background-music.mp3 and update ' +
-          'the <audio> src in index.html.'
+          'Add an mp3 to assets/ and update the <audio> src in index.html.'
         );
       });
       playing = true;
-      iconMusic.style.display = 'none';
-      iconMute.style.display  = '';
+      iconMusic.style.display = '';     /* show music note — now playing */
+      iconMute.style.display  = 'none'; /* hide crossed icon */
       btn.setAttribute('aria-label', 'Pause background music');
     }
   });
 
-  // If audio ends unexpectedly, reset the icon
+  // If audio ends unexpectedly, revert to the "not playing" (muted) icon
   audio.addEventListener('ended', () => {
     playing = false;
-    iconMusic.style.display = '';
-    iconMute.style.display  = 'none';
+    iconMusic.style.display = 'none';
+    iconMute.style.display  = '';
   });
 }
 
