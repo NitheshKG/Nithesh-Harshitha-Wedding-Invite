@@ -198,7 +198,7 @@
     scroll-snap-type: y mandatory is on <html> (see css/style.css).
     Each .event section has scroll-snap-align: start in the page scroll context.
     One scroll/swipe snaps cleanly from hero → event1 → event2 → event3 → event4.
-    Story/RSVP/Footer have no snap-align so they scroll freely afterwards.
+    Story section scrolls freely afterwards.
   -->
 
     <!-- ─── EVENT 1: NICHAYATHARTHAM ─── -->
@@ -557,107 +557,6 @@
       <button id="lightbox-prev"  aria-label="Previous photo">&#8249;</button>
       <button id="lightbox-next"  aria-label="Next photo">&#8250;</button>
       <div id="lightbox-content"></div>
-    </div>
-  </section>
-
-  <!-- ============================== RSVP SECTION ============================== -->
-  <section id="rsvp">
-    <div class="section-header reveal">
-      <p class="section-eyebrow">Kindly Reply</p>
-      <h2 class="section-title">Will You Join Us?</h2>
-      <div class="section-divider" aria-hidden="true">
-        <svg viewBox="0 0 220 24" xmlns="http://www.w3.org/2000/svg">
-          <line x1="0"   y1="12" x2="82"  y2="12" stroke="#C9A96E" stroke-width="0.8" opacity="0.45"/>
-          <path d="M97,12 C95,7 91,5 97,12 C103,19 105,5 97,12Z"  fill="#C9A96E" opacity="0.65"/>
-          <circle cx="110" cy="12" r="3" fill="#D96C7E"/>
-          <path d="M123,12 C121,7 117,5 123,12 C129,19 131,5 123,12Z" fill="#C9A96E" opacity="0.65"/>
-          <line x1="138" y1="12" x2="220" y2="12" stroke="#C9A96E" stroke-width="0.8" opacity="0.45"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="rsvp-wrapper reveal">
-      <form id="rsvp-form" novalidate autocomplete="on">
-
-        <div class="form-group">
-          <label for="rsvp-name">Your Name</label>
-          <input type="text" id="rsvp-name" name="name"
-                 placeholder="Enter your full name" required
-                 autocomplete="name" />
-        </div>
-
-        <div class="form-group">
-          <label for="rsvp-guests">Number of Guests</label>
-          <select id="rsvp-guests" name="guests" autocomplete="off">
-            <option value="1">1 person (just me)</option>
-            <option value="2" selected>2 people</option>
-            <option value="3">3 people</option>
-            <option value="4">4 people</option>
-            <option value="5">5 or more</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Will you be attending?</label>
-          <div class="radio-group">
-            <label class="radio-label">
-              <input type="radio" name="attending" value="yes" checked />
-              <span>Joyfully accepts</span>
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="attending" value="no" />
-              <span>Regretfully declines</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="rsvp-message">
-            A Note for the Couple
-            <span class="field-optional">(optional)</span>
-          </label>
-          <textarea id="rsvp-message" name="message" rows="3"
-                    placeholder="Share your wishes or a message for the couple…"></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Send RSVP &nbsp;✦</button>
-
-        <!--
-        ══════════════════════════════════════════════════════════════════
-        HOW TO CONNECT THIS FORM TO A FREE BACKEND:
-
-        Option A — Formspree (easiest, free up to 50 submissions/month):
-          1. Sign up at https://formspree.io (free)
-          2. Create a new form → copy your unique form ID (e.g. "xabc1234")
-          3. In js/script.js, inside initRSVP(), replace the comment block
-             with a real fetch() call — template already provided there.
-
-        Option B — Google Forms:
-          1. Create a Google Form at https://forms.google.com
-          2. Match field names (name, guests, attending, message)
-          3. Replace this <form> block entirely with the Google Form embed code,
-             or use the pre-filled link approach documented in js/script.js.
-        ══════════════════════════════════════════════════════════════════
-        -->
-      </form>
-
-      <!-- Thank-you card — hidden until form is submitted, revealed by GSAP -->
-      <div id="thankyou-card" aria-live="polite">
-        <div class="thankyou-icon" aria-hidden="true">
-          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" fill="#FDE8EF" stroke="#D96C7E" stroke-width="1.5"/>
-            <path d="M32,22 C32,15 22,12 22,22 C22,32 32,42 32,42 C32,42 42,32 42,22 C42,12 32,15 32,22Z"
-                  fill="#D96C7E" opacity="0.88"/>
-          </svg>
-        </div>
-        <!-- EDIT: Personalise the thank-you message -->
-        <h3 class="thankyou-title">Thank You!</h3>
-        <p class="thankyou-message">
-          We are so grateful for your love and blessings.<br/>
-          We cannot wait to celebrate with you!
-        </p>
-        <p class="thankyou-sig">— Nithesh &amp; Harshitha</p>
-      </div>
     </div>
   </section>
 

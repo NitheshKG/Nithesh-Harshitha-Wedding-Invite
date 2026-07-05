@@ -13,11 +13,10 @@
  *  7.  initScrollProgress()   (thin bar tracks page + events scroll)
  *  8.  initEventSections()    (IntersectionObserver + GSAP per event)
  *  9.  updateDots()           (sync active dot state)
- * 10.  initScrollReveal()     (CSS reveal for Story / RSVP sections)
+ * 10.  initScrollReveal()     (CSS reveal for Story section)
  * 11.  initStoryDeck()        (swipeable love-story photo deck + lightbox)
- * 12.  initRSVP()             (form → thank-you card animation)
- * 13.  initMusicToggle()      (play/pause audio on button click)
- * 14.  DOMContentLoaded       (boots everything)
+ * 12.  initMusicToggle()      (play/pause audio on button click)
+ * 13.  DOMContentLoaded       (boots everything)
  * ================================================================
  */
 
@@ -537,7 +536,7 @@ function updateDots(activeIndex) {
    Adds the .revealed class when an element with .reveal crosses
    the viewport threshold (CSS handles the actual transition).
    Also programmatically adds .reveal to gallery items and the
-   RSVP form wrapper so they stagger-in on scroll.
+   Also programmatically adds .reveal to gallery items so they stagger-in on scroll.
    ================================================================ */
 function initScrollReveal() {
   // Observe all .reveal elements
@@ -778,120 +777,6 @@ function initStoryDeck() {
 }
 
 /* ================================================================
-   12. RADIO BUTTON HIGHLIGHT FALLBACK
-   CSS :has(input:checked) doesn’t work on Chrome < 105 (old Android).
-   This JS fallback adds .radio-checked so the pill highlight always works.
-   ================================================================ */
-function initRadioHighlight() {
-  var form = document.getElementById('rsvp-form');
-  if (!form) return;
-
-  function updateGroup(name) {
-    form.querySelectorAll('input[name="' + name + '"]').forEach(function(radio) {
-      var label = radio.closest('.radio-label');
-      if (label) label.classList.toggle('radio-checked', radio.checked);
-    });
-  }
-
-  form.querySelectorAll('.radio-label input[type="radio"]').forEach(function(radio) {
-    // Set initial state
-    updateGroup(radio.name);
-    radio.addEventListener('change', function() { updateGroup(radio.name); });
-  });
-}
-
-/* ================================================================
-   12b. RSVP FORM
-   ================================================================ */
-function initRSVP() {
-  const form     = document.getElementById('rsvp-form');
-  const thankyou = document.getElementById('thankyou-card');
-  if (!form || !thankyou) return;
-
-  const nameInput = form.querySelector('#rsvp-name');
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-
-    // ── Validate required name field ──
-    if (!nameInput.value.trim()) {
-      nameInput.focus();
-      // Brief red-border shake to signal the error
-      nameInput.style.borderColor = 'var(--rose-deep)';
-      nameInput.style.animation   = 'none';
-      setTimeout(() => {
-        nameInput.style.borderColor = '';
-      }, 1800);
-      return;
-    }
-
-    /*
-    ══════════════════════════════════════════════════════════════
-    TO SEND FORM DATA TO FORMSPREE (free tier):
-
-    const payload = {
-      name:      nameInput.value.trim(),
-      guests:    form.querySelector('#rsvp-guests').value,
-      attending: form.querySelector('input[name="attending"]:checked')?.value || 'yes',
-      message:   form.querySelector('#rsvp-message').value.trim(),
-    };
-
-    fetch('https://formspree.io/f/YOUR_FORM_ID_HERE', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-    .then(res => {
-      if (res.ok) showThankyou();
-      else console.warn('Formspree submission failed:', res.status);
-    })
-    .catch(err => {
-      console.error('Network error during RSVP submit:', err);
-    });
-
-    return; // ← uncomment this line when using the fetch approach
-    ══════════════════════════════════════════════════════════════
-    */
-
-    showThankyou();
-  });
-
-  function showThankyou() {
-    if (typeof gsap === 'undefined') {
-      // GSAP not available — just swap elements
-      form.style.display = 'none';
-      thankyou.style.display = 'block';
-      thankyou.style.opacity = '1';
-      return;
-    }
-
-    // Fade out form, then reveal thank-you card with spring animation
-    gsap.to(form, {
-      opacity: 0,
-      y: -18,
-      duration: 0.4,
-      ease: 'power2.in',
-      onComplete: () => {
-        form.style.display   = 'none';
-        thankyou.style.display = 'block';
-
-        gsap.fromTo(
-          thankyou,
-          { opacity: 0, scale: 0.82, y: 24 },
-          { opacity: 1, scale: 1,    y: 0,
-            duration: 0.75,
-            ease: 'back.out(1.5)',
-          }
-        );
-      },
-    });
-  }
-}
-
-/* ================================================================
    13. MUSIC TOGGLE
    Muted/silent by default (per browser autoplay policies).
    User must tap the button to start. Swap SVG icons on click.
@@ -968,19 +853,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 5. Events section scroll-snap + per-event GSAP entrances ──
   initEventSections();
 
-  // ── 6. Scroll-reveal for Our Story & RSVP sections ──
+  // ── 6. Scroll-reveal for Our Story section ──
   initScrollReveal();
 
   // ── 7. Story deck with touch swipe + lightbox ──
   initStoryDeck();
 
-  // ── 8. RSVP form → animated thank-you card ──
-  initRSVP();
-
-  // ── 9. Background music toggle button ──
+  // ── 8. Background music toggle button ──
   initMusicToggle();
-
-  // ── 10. Radio button highlight fallback for old Android (no :has() support) ──
-  initRadioHighlight();
 
 });
