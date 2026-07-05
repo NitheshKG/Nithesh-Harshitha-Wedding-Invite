@@ -14,7 +14,7 @@
  *  8.  initEventSections()    (IntersectionObserver + GSAP per event)
  *  9.  updateDots()           (sync active dot state)
  * 10.  initScrollReveal()     (CSS reveal for Story / RSVP sections)
- * 11.  initGallery()          (lightbox + touch-swipe)
+ * 11.  initStoryDeck()        (swipeable love-story photo deck + lightbox)
  * 12.  initRSVP()             (form → thank-you card animation)
  * 13.  initMusicToggle()      (play/pause audio on button click)
  * 14.  DOMContentLoaded       (boots everything)
@@ -24,6 +24,30 @@
 /* ================================================================
    1. CONFIG — EDIT THIS SECTION
    ================================================================ */
+
+/**
+ * Detect low-end / mobile devices to reduce animation cost.
+ * Returns true on narrow screens or very low-CPU devices.
+ */
+function isLowEndDevice() {
+  var mobile = window.innerWidth < 768;
+  var lowCPU = (navigator.hardwareConcurrency || 4) <= 2;
+  var lowRAM = typeof navigator.deviceMemory !== 'undefined' && navigator.deviceMemory < 2;
+  return mobile || lowCPU || lowRAM;
+}
+
+/**
+ * Safe scrollIntoView wrapper — old Android Chrome ignores the options
+ * object so we catch the error and fall back to plain scrollIntoView().
+ */
+function smoothScrollTo(el) {
+  try {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    el.scrollIntoView(true);
+  }
+}
+
 const CONFIG = {
   /**
    * EDIT: Set the wedding date and time.
@@ -32,11 +56,12 @@ const CONFIG = {
    */
   weddingDate: new Date('2026-08-29T09:00:00+05:30'),
 
-  /** Number of floating petals on the hero canvas */
-  heroPetalCount: 28,
+  /** Number of floating petals on the hero canvas.
+   *  Automatically halved on mobile/low-end devices. */
+  heroPetalCount: isLowEndDevice() ? 12 : 28,
 
   /** Number of floating petals inside each event section */
-  eventPetalCount: 10,
+  eventPetalCount: isLowEndDevice() ? 5 : 10,
 
   /**
    * Petal colours — blush/rose/peach family.
@@ -221,14 +246,17 @@ function initHeroAnimation() {
     // Fallback: just reveal everything immediately if GSAP failed to load
     document.querySelectorAll(
       '.hero-eyebrow,.hero-weds,.hero-divider,.hero-tagline,' +
-      '.hero-date,#countdown,.scroll-indicator'
-    ).forEach(el => {
+      '.hero-date,#countdown,.scroll-indicator,.hero-invite'
+    ).forEach(function(el) {
       el.style.opacity   = '1';
       el.style.transform = 'none';
     });
     // Also show name text (they start visible in no-GSAP case)
     return;
   }
+
+  // Signal to CSS that GSAP is available — event-content will be hidden via .gsap-ready
+  document.body.classList.add('gsap-ready');
 
   // ── Split each hero name element into per-letter spans ──
   ['.hero-name--groom', '.hero-name--bride'].forEach(selector => {
@@ -248,10 +276,12 @@ function initHeroAnimation() {
   });
 
   // ── Set initial GSAP states BEFORE timeline runs ──
+  // NOTE: rotateX intentionally removed — 3D transforms render as invisible
+  // zero-height lines on old Android Chrome (< 88) without an explicit
+  // parent perspective, causing names to stay permanently hidden.
   gsap.set('.hero-name--groom .letter-span, .hero-name--bride .letter-span', {
     opacity: 0,
-    y: 65,
-    rotateX: 35,
+    y: 40,
   });
   gsap.set('.hero-weds, .hero-divider, .hero-invite, .hero-tagline, .hero-date, #countdown, .scroll-indicator', {
     opacity: 0,
@@ -272,7 +302,7 @@ function initHeroAnimation() {
       '-=0.05'
     )
     .to('.hero-name--groom .letter-span',
-      { opacity: 1, y: 0, rotateX: 0, duration: 0.75, stagger: 0.038 },
+      { opacity: 1, y: 0, duration: 0.75, stagger: 0.038 },
       '-=0.1'
     )
     .to('.hero-weds',
@@ -280,7 +310,7 @@ function initHeroAnimation() {
       '-=0.25'
     )
     .to('.hero-name--bride .letter-span',
-      { opacity: 1, y: 0, rotateX: 0, duration: 0.75, stagger: 0.038 },
+      { opacity: 1, y: 0, duration: 0.75, stagger: 0.038 },
       '-=0.35'
     )
     .to('.hero-divider',
@@ -366,11 +396,13 @@ function initHeroPetals() {
   pc.start();
 
   // Pause when hero is off-screen (saves GPU cycles)
-  const obs = new IntersectionObserver(([entry]) => {
-    entry.isIntersecting ? pc.start() : pc.stop();
-  }, { threshold: 0.05 });
-
-  obs.observe(hero);
+  // IntersectionObserver fallback: just keep running if not supported (no harm)
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver(function(entries) {
+      entries[0].isIntersecting ? pc.start() : pc.stop();
+    }, { threshold: 0.05 });
+    obs.observe(hero);
+  }
 }
 
 /* ================================================================
@@ -406,6 +438,32 @@ function initEventSections() {
 
   if (!sections.length) return;
 
+  // ── Helper to reveal all event content without animation ──
+  function showAllEventContent() {
+    sections.forEach(function(section) {
+      const content = section.querySelector('.event-content');
+      if (content) {
+        content.style.opacity   = '1';
+        content.style.transform = 'none';
+      }
+    });
+    if (dotsNav) dotsNav.classList.add('visible');
+  }
+
+  // ── Dot click: smooth scroll to section ──
+  document.querySelectorAll('.dot').forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      const idx = parseInt(dot.dataset.index, 10);
+      if (sections[idx]) smoothScrollTo(sections[idx]);
+    });
+  });
+
+  // ── Bail out immediately if GSAP or IntersectionObserver not available ──
+  if (typeof gsap === 'undefined' || !('IntersectionObserver' in window)) {
+    showAllEventContent();
+    return;
+  }
+
   // ── Per-event petal canvases (initially stopped) ──
   const petalMap = new Map();
 
@@ -421,7 +479,6 @@ function initEventSections() {
   const inView = new Set();
 
   // ── Entrance directions per event index (alternating left / right) ──
-  // alternating left / right entrance per event
   const xFrom = [-65, 65, -65, 65];
 
   sections.forEach((section, i) => {
@@ -457,21 +514,11 @@ function initEventSections() {
         if (inView.size === 0) dotsNav.classList.remove('visible');
       }
     }, {
-      root: null,      // observe against the viewport (not a scroll container)
+      root: null,
       threshold: 0.55,
     });
 
     obs.observe(section);
-  });
-
-  // ── Dot click → smooth-scroll the page to that event section ──
-  document.querySelectorAll('.dot').forEach(dot => {
-    dot.addEventListener('click', () => {
-      const idx = parseInt(dot.dataset.index, 10);
-      if (sections[idx]) {
-        sections[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
   });
 }
 
@@ -493,15 +540,15 @@ function updateDots(activeIndex) {
    RSVP form wrapper so they stagger-in on scroll.
    ================================================================ */
 function initScrollReveal() {
-  // Stagger gallery items
-  document.querySelectorAll('.gallery-item').forEach((el, i) => {
-    el.classList.add('reveal');
-    el.style.transitionDelay = `${i * 0.07}s`;
-  });
-
   // Observe all .reveal elements
   const targets = document.querySelectorAll('.reveal');
   if (!targets.length) return;
+
+  // Fallback: if IntersectionObserver is not supported, reveal everything immediately
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach(function(el) { el.classList.add('revealed'); });
+    return;
+  }
 
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -516,121 +563,245 @@ function initScrollReveal() {
 }
 
 /* ================================================================
-   11. GALLERY LIGHTBOX
-   Opens a full-screen overlay on gallery item click/tap.
-   Supports keyboard nav (← →, Escape) and touch swipe.
+   11. STORY DECK
+   Swipeable love-story photo deck (9 photos: lf_1.jpg – lf_9.jpg).
+   Touch swipe, tap-zone buttons, keyboard ← →, and fullscreen view
+   via the existing #lightbox overlay.
    ================================================================ */
-function initGallery() {
-  const gallery     = document.getElementById('gallery');
-  const lightbox    = document.getElementById('lightbox');
-  const lbContent   = document.getElementById('lightbox-content');
-  const closeBtn    = document.getElementById('lightbox-close');
-  const prevBtn     = document.getElementById('lightbox-prev');
-  const nextBtn     = document.getElementById('lightbox-next');
+function initStoryDeck() {
+  var deck      = document.getElementById('story-deck');
+  var track     = document.getElementById('story-track');
+  var counterEl = document.getElementById('story-counter');
+  var prevBtn   = document.getElementById('story-prev');
+  var nextBtn   = document.getElementById('story-next');
+  var expandBtn = document.getElementById('story-expand');
+  var lightbox  = document.getElementById('lightbox');
+  var lbContent = document.getElementById('lightbox-content');
+  var closeBtn  = document.getElementById('lightbox-close');
+  var lbPrevBtn = document.getElementById('lightbox-prev');
+  var lbNextBtn = document.getElementById('lightbox-next');
 
-  if (!gallery || !lightbox) return;
+  if (!deck || !track) return;
 
-  const items = Array.from(gallery.querySelectorAll('.gallery-item'));
-  let current = 0;
-  let touchX0 = 0;  // touch-start X for swipe detection
+  var slides   = Array.from(track.querySelectorAll('.story-slide'));
+  var segments = Array.from(deck.querySelectorAll('.story-segment'));
+  var TOTAL    = slides.length;  // 9
+  var current  = 0;
+  var isAnimating = false;
 
-  /** Build the inner HTML for the lightbox at a given index. */
-  function getContent(index) {
-    const item = items[index];
-    const img  = item.querySelector('img');
-    if (img) {
-      // Real photo
-      const el = document.createElement('img');
-      el.src = img.src;
-      el.alt = img.alt || `Photo ${index + 1}`;
-      return el;
-    }
-    // Placeholder card (no real image yet)
-    const ph = document.createElement('div');
-    ph.style.cssText = `
-      width: min(80vw, 400px);
-      aspect-ratio: 4/3;
-      background: linear-gradient(135deg,#FDE8EF,#FFF0E6);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cormorant Garamond',Georgia,serif;
-      font-style: italic;
-      font-size: 1rem;
-      color: #9B7878;
-    `;
-    const span = item.querySelector('.gallery-placeholder span');
-    ph.textContent = span ? span.textContent : `Photo ${index + 1}`;
-    return ph;
+  /* Touch tracking */
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var lbTouchX    = 0;
+
+  /* ── Update progress bar, counter and button states ── */
+  function updateUI() {
+    if (counterEl) counterEl.textContent = (current + 1) + ' / ' + TOTAL;
+    segments.forEach(function(seg, i) {
+      seg.classList.toggle('past',   i < current);
+      seg.classList.toggle('active', i === current);
+    });
+    if (prevBtn) prevBtn.disabled = (current === 0);
+    if (nextBtn) nextBtn.disabled = (current === TOTAL - 1);
   }
 
-  function open(index) {
+  /* ── Animate to a slide ── */
+  function goTo(index, direction) {
+    if (isAnimating || index < 0 || index >= TOTAL || index === current) return;
+    isAnimating = true;
+
+    var outgoing = slides[current];
+    var incoming = slides[index];
+
+    /* 1. Snap incoming to its start edge with transitions OFF so no
+          accidental animation fires while we position it. */
+    incoming.style.transition = 'none';
+    incoming.style.opacity    = '0';
+    incoming.style.transform  = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+
+    /* 2. Force style recalculation to commit the snap position. */
+    incoming.offsetWidth; // eslint-disable-line no-unused-expressions
+
+    /* 3. Re-enable transitions, then set the final states for both slides
+          in the same batch so the browser fires one transition per element. */
+    incoming.style.transition = '';
+    incoming.style.opacity    = '1';
+    incoming.style.transform  = 'translateX(0)';
+
+    outgoing.style.opacity   = '0';
+    outgoing.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+
+    /* 4. Keep CSS class in sync for any class-based rules. */
+    incoming.classList.add('active');
+    outgoing.classList.remove('active');
+
     current = index;
+    updateUI();
+
+    /* 5. After the transition, clear all inline styles so the CSS
+          class rules take over cleanly for the next call. */
+    setTimeout(function() {
+      outgoing.style.opacity   = '';
+      outgoing.style.transform = '';
+      incoming.style.opacity   = '';
+      incoming.style.transform = '';
+      isAnimating = false;
+    }, 420);
+  }
+
+  /* ── Tap-zone button clicks ── */
+  if (prevBtn) prevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    goTo(current - 1, 'prev');
+  });
+  if (nextBtn) nextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    goTo(current + 1, 'next');
+  });
+
+  /* ── Touch swipe on the deck ── */
+  deck.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  deck.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    /* Only swipe if horizontal movement is dominant and exceeds threshold */
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      goTo(dx < 0 ? current + 1 : current - 1, dx < 0 ? 'next' : 'prev');
+    }
+  }, { passive: true });
+
+  /* ── Lightbox helpers ── */
+  function buildLbImg(index) {
+    if (!lbContent) return;
     lbContent.innerHTML = '';
-    lbContent.appendChild(getContent(index));
+    var slide = slides[index];
+    var img   = slide ? slide.querySelector('img') : null;
+    if (img) {
+      var el = document.createElement('img');
+      el.src = img.src;
+      el.alt = img.alt || 'Chapter ' + (index + 1);
+      lbContent.appendChild(el);
+    }
+  }
+
+  function openLightbox(index) {
+    if (!lightbox) return;
+    current = index;
+    buildLbImg(index);
     lightbox.style.display = 'flex';
-    // Force reflow so the CSS transition fires
-    lightbox.offsetHeight; // eslint-disable-line no-unused-expressions
+    lightbox.offsetHeight; /* eslint-disable-line no-unused-expressions */
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
-    closeBtn.focus();
+    if (closeBtn) closeBtn.focus();
   }
 
-  function close() {
+  function closeLightbox() {
+    if (!lightbox) return;
     lightbox.classList.remove('open');
     lightbox.style.display = 'none';
     document.body.style.overflow = '';
-    // Return focus to the item that was opened
-    items[current]?.focus();
-  }
-
-  function navigate(direction) {
-    current = (current + direction + items.length) % items.length;
-    lbContent.innerHTML = '';
-    lbContent.appendChild(getContent(current));
-  }
-
-  // Item click / keyboard activation
-  items.forEach((item, i) => {
-    item.addEventListener('click', () => open(i));
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+    /* Re-sync every slide's .active class to match current.
+       The lightbox prev/next buttons change current but don’t touch
+       story-deck slide state, so we must reconcile on close. */
+    slides.forEach(function(slide, i) {
+      slide.classList.toggle('active', i === current);
+      /* Also clear any stale inline animation styles. */
+      slide.style.opacity   = '';
+      slide.style.transform = '';
+      slide.style.transition = '';
     });
+    deck.focus();
+  }
+
+  /* Tap anywhere on deck (not on tap-zones or expand) → open lightbox */
+  deck.addEventListener('click', function(e) {
+    if (e.target.closest('.story-tap-zone') || e.target.closest('.story-expand')) return;
+    openLightbox(current);
   });
 
-  closeBtn.addEventListener('click', close);
-  prevBtn.addEventListener('click', e => { e.stopPropagation(); navigate(-1); });
-  nextBtn.addEventListener('click', e => { e.stopPropagation(); navigate(+1); });
-
-  // Close on backdrop click
-  lightbox.addEventListener('click', e => {
-    if (e.target === lightbox) close();
+  if (expandBtn) expandBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openLightbox(current);
   });
 
-  // Keyboard navigation
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape')     close();
-    if (e.key === 'ArrowLeft')  navigate(-1);
-    if (e.key === 'ArrowRight') navigate(+1);
+  /* ── Lightbox controls ── */
+  if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+
+  if (lbPrevBtn) lbPrevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var n = (current - 1 + TOTAL) % TOTAL;
+    current = n; buildLbImg(n); updateUI();
+  });
+  if (lbNextBtn) lbNextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var n = (current + 1) % TOTAL;
+    current = n; buildLbImg(n); updateUI();
   });
 
-  // Touch swipe (passive listeners for scroll performance)
-  lightbox.addEventListener('touchstart', e => {
-    touchX0 = e.touches[0].clientX;
-  }, { passive: true });
+  if (lightbox) {
+    /* Close on backdrop click */
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    /* Touch swipe inside lightbox */
+    lightbox.addEventListener('touchstart', function(e) {
+      lbTouchX = e.touches[0].clientX;
+    }, { passive: true });
+    lightbox.addEventListener('touchend', function(e) {
+      var delta = e.changedTouches[0].clientX - lbTouchX;
+      if (Math.abs(delta) > 48) {
+        if (delta < 0) { if (lbNextBtn) lbNextBtn.click(); }
+        else           { if (lbPrevBtn) lbPrevBtn.click(); }
+      }
+    }, { passive: true });
+  }
 
-  lightbox.addEventListener('touchend', e => {
-    const delta = e.changedTouches[0].clientX - touchX0;
-    if (Math.abs(delta) > 48) navigate(delta < 0 ? +1 : -1);
-  }, { passive: true });
+  /* ── Keyboard — unified handler for deck nav and lightbox nav ── */
+  document.addEventListener('keydown', function(e) {
+    var lbOpen = lightbox && lightbox.classList.contains('open');
+    if (lbOpen) {
+      if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); if (lbPrevBtn) lbPrevBtn.click(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); if (lbNextBtn) lbNextBtn.click(); }
+    } else {
+      if (e.key === 'ArrowLeft')  goTo(current - 1, 'prev');
+      if (e.key === 'ArrowRight') goTo(current + 1, 'next');
+    }
+  });
+
+  /* ── Initialise ── */
+  updateUI();
 }
 
 /* ================================================================
-   12. RSVP FORM
-   Prevents page reload, validates name, then transitions to a
-   GSAP-animated thank-you card.
+   12. RADIO BUTTON HIGHLIGHT FALLBACK
+   CSS :has(input:checked) doesn’t work on Chrome < 105 (old Android).
+   This JS fallback adds .radio-checked so the pill highlight always works.
+   ================================================================ */
+function initRadioHighlight() {
+  var form = document.getElementById('rsvp-form');
+  if (!form) return;
+
+  function updateGroup(name) {
+    form.querySelectorAll('input[name="' + name + '"]').forEach(function(radio) {
+      var label = radio.closest('.radio-label');
+      if (label) label.classList.toggle('radio-checked', radio.checked);
+    });
+  }
+
+  form.querySelectorAll('.radio-label input[type="radio"]').forEach(function(radio) {
+    // Set initial state
+    updateGroup(radio.name);
+    radio.addEventListener('change', function() { updateGroup(radio.name); });
+  });
+}
+
+/* ================================================================
+   12b. RSVP FORM
    ================================================================ */
 function initRSVP() {
   const form     = document.getElementById('rsvp-form');
@@ -795,13 +966,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 6. Scroll-reveal for Our Story & RSVP sections ──
   initScrollReveal();
 
-  // ── 7. Gallery lightbox with touch swipe ──
-  initGallery();
+  // ── 7. Story deck with touch swipe + lightbox ──
+  initStoryDeck();
 
   // ── 8. RSVP form → animated thank-you card ──
   initRSVP();
 
   // ── 9. Background music toggle button ──
   initMusicToggle();
+
+  // ── 10. Radio button highlight fallback for old Android (no :has() support) ──
+  initRadioHighlight();
 
 });

@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <!-- Mobile optimisation -->
+  <meta name="theme-color" content="#F8C8DC" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
 
   <!-- ================================================================
        EDIT: Update these meta tags — they control how the link looks
@@ -24,10 +30,18 @@
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23F8C8DC'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23F4A6B7'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%23D96C7E'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23C2415A'/%3E%3C/svg%3E" />
 
   <!-- Google Fonts — Great Vibes (script), Cormorant Garamond (display serif), Poppins (body) -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="//fonts.gstatic.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap"
-        rel="stylesheet" />
+  <!-- Non-render-blocking font load: page shows instantly with system fonts,
+       Google Fonts swap in when downloaded (display=swap handles FOUT) -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap"
+        media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" />
+  </noscript>
 
   <!-- GSAP core (free, CDN) — used for hero letter-stagger and section entrances -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
@@ -469,31 +483,72 @@
       </div>
     </div>
 
-    <!--
-      EDIT: Replace each .gallery-placeholder div with:
-        <img src="assets/gallery-1.jpg" alt="Caption text" loading="lazy" />
-      Make sure to add photos to the /assets/ folder.
-      Recommended size: 800×600px or 4:3 ratio JPEG.
-    -->
-    <div class="gallery-grid" id="gallery">
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 1" data-index="0">
-        <div class="gallery-placeholder"><span>Photo 1</span></div>
+    <!-- EDIT: Add lf_1.jpg through lf_9.jpg to the assets/ folder -->
+    <div class="story-deck reveal" id="story-deck" tabindex="-1" role="region" aria-label="Love story photo viewer">
+
+      <!-- 9-segment progress bar -->
+      <div class="story-progress" aria-hidden="true">
+        <div class="story-segment active" data-index="0"></div>
+        <div class="story-segment" data-index="1"></div>
+        <div class="story-segment" data-index="2"></div>
+        <div class="story-segment" data-index="3"></div>
+        <div class="story-segment" data-index="4"></div>
+        <div class="story-segment" data-index="5"></div>
+        <div class="story-segment" data-index="6"></div>
+        <div class="story-segment" data-index="7"></div>
+        <div class="story-segment" data-index="8"></div>
       </div>
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 2" data-index="1">
-        <div class="gallery-placeholder"><span>Photo 2</span></div>
+
+      <!-- Photo track -->
+      <div class="story-track" id="story-track">
+        <div class="story-slide active" data-index="0">
+          <img src="assets/lf_1.jpeg" alt="Our love story &#8211; chapter 1" loading="eager" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="1">
+          <img src="assets/lf_2.jpeg" alt="Our love story &#8211; chapter 2" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="2">
+          <img src="assets/lf_3.jpeg" alt="Our love story &#8211; chapter 3" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="3">
+          <img src="assets/lf_4.jpeg" alt="Our love story &#8211; chapter 4" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="4">
+          <img src="assets/lf_5.jpeg" alt="Our love story &#8211; chapter 5" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="5">
+          <img src="assets/lf_6.jpeg" alt="Our love story &#8211; chapter 6" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="6">
+          <img src="assets/lf_7.jpeg" alt="Our love story &#8211; chapter 7" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="7">
+          <img src="assets/lf_8.jpeg" alt="Our love story &#8211; chapter 8" loading="lazy" draggable="false" />
+        </div>
+        <div class="story-slide" data-index="8">
+          <img src="assets/lf_9.jpeg" alt="Our love story &#8211; chapter 9" loading="lazy" draggable="false" />
+        </div>
       </div>
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 3" data-index="2">
-        <div class="gallery-placeholder"><span>Photo 3</span></div>
-      </div>
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 4" data-index="3">
-        <div class="gallery-placeholder"><span>Photo 4</span></div>
-      </div>
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 5" data-index="4">
-        <div class="gallery-placeholder"><span>Photo 5</span></div>
-      </div>
-      <div class="gallery-item" tabindex="0" role="button" aria-label="View photo 6" data-index="5">
-        <div class="gallery-placeholder"><span>Photo 6</span></div>
-      </div>
+
+      <!-- Invisible large tap zones — left 40% = prev, right 40% = next -->
+      <button class="story-tap-zone story-tap-zone--prev" id="story-prev" aria-label="Previous photo"></button>
+      <button class="story-tap-zone story-tap-zone--next" id="story-next" aria-label="Next photo"></button>
+
+      <!-- Decorative arrow hints (pointer-events: none) -->
+      <span class="story-arrow story-arrow--prev" aria-hidden="true">&#8249;</span>
+      <span class="story-arrow story-arrow--next" aria-hidden="true">&#8250;</span>
+
+      <!-- Counter -->
+      <div class="story-counter" id="story-counter" aria-live="polite" aria-atomic="true">1 / 9</div>
+
+      <!-- Fullscreen expand -->
+      <button class="story-expand" id="story-expand" aria-label="View photo fullscreen">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+          <path d="M3 8V3h5M17 8V3h-5M3 12v5h5M17 12v5h-5"/>
+        </svg>
+      </button>
+
     </div>
 
     <!-- Lightbox overlay -->
