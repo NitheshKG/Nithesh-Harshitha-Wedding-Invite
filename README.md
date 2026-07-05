@@ -41,7 +41,7 @@ search for `EDIT:` to jump to each one.
 
 ## Colours & Fonts
 
-All colours are CSS custom properties at the top of `css/style.css`  
+All colours are CSS custom properties  at the top of `css/style.css`  
 in the `:root {}` block. Change `--rose-mid`, `--gold`, etc. there and  
 the whole site updates automatically.
 
