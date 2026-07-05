@@ -1,0 +1,16 @@
+# ── Media assets (photos, audio) ──────────────────────────────
+assets/
+
+# ── macOS ──────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Editors / IDEs ─────────────────────────────────────────────
+.vscode/
+*.code-workspace
+.idea/
+
+# ── Misc ───────────────────────────────────────────────────────
+Thumbs.db
+*.log
