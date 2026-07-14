@@ -984,7 +984,7 @@ function initSFRMap() {
     btn.setAttribute('aria-label', 'View details for ' + loc.title);
     btn.style.left = loc.x + '%';
     btn.style.top  = loc.y + '%';
-    btn.addEventListener('click', function() { openSFRPopup(loc); });
+    btn.addEventListener('click', function(e) { e.stopPropagation(); openSFRPopup(loc); });
     layer.appendChild(btn);
   });
 
@@ -1011,8 +1011,8 @@ function initSFRMap() {
     }, 300);
   }
 
-  overlay.addEventListener('click', closeSFRPopup);
-  closeBtn.addEventListener('click', closeSFRPopup);
+  overlay.addEventListener('click', function(e) { e.stopPropagation(); closeSFRPopup(); });
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); closeSFRPopup(); });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && popup.classList.contains('active')) closeSFRPopup();
   });
