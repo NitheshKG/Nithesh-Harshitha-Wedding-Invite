@@ -959,7 +959,67 @@ function initMusicToggle() {
 }
 
 /* ================================================================
-   14. BOOT — runs when the DOM is fully parsed
+   14. INTERACTIVE RESORT MAP
+   Renders invisible click zones over the numbered markers on
+   the SFR_Map.png venue image and shows a popup with details.
+   ================================================================ */
+function initSFRMap() {
+  var layer = document.getElementById('sfr-pointers-layer');
+  var popup = document.getElementById('sfr-popup');
+  var overlay = document.getElementById('sfr-overlay');
+  var closeBtn = document.getElementById('sfr-close-btn');
+  if (!layer || !popup || !overlay) return;
+
+  // x / y are percentages of the image width / height
+  var locations = [
+    { id: 1, x: 48.5, y: 42.5, title: 'Main Villa — Nichayathartham', desc: 'Where Our Journey Begins \uD83D\uDC8D  This is the spot where our families come together, promises are made, and our official countdown begins!' },
+    { id: 2, x: 62.1, y: 23.0, title: 'Swar Lawn — Reception',         desc: 'Party & Feast Destination \uD83C\uDF89  Come over here for music, laughter, a grand feast, and to toast the newlyweds.' },
+    { id: 3, x: 53, y: 43, title: 'Main Villa — Upanayanam',       desc: 'The Sacred Threshold \u2728  The venue for the traditional thread ceremony. Join us to bless a beautiful new milestone of wisdom and tradition.' },
+    { id: 4, x: 62.1, y: 34.0, title: 'Swar Lawn — Wedding',          desc: 'The Main Event (Muhurtham) \uD83C\uDF38  The big moment! Witness the sacred vows, the tying of the mangalsutra, and the start of our forever.' }
+  ];
+
+  locations.forEach(function(loc) {
+    var btn = document.createElement('button');
+    btn.className = 'sfr-map-pointer';
+    btn.setAttribute('aria-label', 'View details for ' + loc.title);
+    btn.style.left = loc.x + '%';
+    btn.style.top  = loc.y + '%';
+    btn.addEventListener('click', function() { openSFRPopup(loc); });
+    layer.appendChild(btn);
+  });
+
+  function openSFRPopup(loc) {
+    document.getElementById('sfr-popup-badge').textContent = loc.id;
+    document.getElementById('sfr-popup-title').textContent = loc.title;
+    document.getElementById('sfr-popup-desc').textContent  = loc.desc;
+    popup.style.display   = 'block';
+    overlay.style.display = 'block';
+    setTimeout(function() {
+      popup.classList.add('active');
+      overlay.classList.add('active');
+    }, 10);
+  }
+
+  function closeSFRPopup() {
+    popup.classList.remove('active');
+    overlay.classList.remove('active');
+    // Remove focus from the pointer button so the hover highlight disappears
+    if (document.activeElement) document.activeElement.blur();
+    setTimeout(function() {
+      popup.style.display   = 'none';
+      overlay.style.display = 'none';
+    }, 300);
+  }
+
+  overlay.addEventListener('click', closeSFRPopup);
+  closeBtn.addEventListener('click', closeSFRPopup);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && popup.classList.contains('active')) closeSFRPopup();
+  });
+}
+
+/* ================================================================
+   15. BOOT — runs when the DOM is fully parsed
    ================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -989,5 +1049,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── 8. Background music toggle button ──
   initMusicToggle();
+
+  // ── 9. Interactive resort venue map ──
+  initSFRMap();
 
 });

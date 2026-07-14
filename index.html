@@ -329,11 +329,12 @@
       </div>
     </div>
     <div class="venue-body reveal">
-      <!-- EDIT: Make sure SFR_layout_map_alone.jpeg is in the assets/ folder -->
+      <!-- EDIT: Make sure SFR_Map.png is in the assets/ folder -->
       <div class="location-map-wrap">
         <img src="assets/SFR_Map.png"
              alt="Selvamathi Farm Resorts layout map"
-             loading="lazy" />
+             loading="lazy" id="sfrMapImage" />
+        <div id="sfr-pointers-layer" aria-hidden="true"></div>
       </div>
       <!-- EDIT: Replace both URLs with your exact Google Maps share link -->
       <a href="https://www.google.com/maps/search/Selvamathi+Farm+Resorts"
@@ -761,5 +762,54 @@
   </footer>
 
   <script src="js/script.js" defer></script>
+
+  <!-- Resort map popup (rendered by initSFRMap in script.js) -->
+  <div class="sfr-popup-overlay" id="sfr-overlay"></div>
+  <div class="sfr-popup" id="sfr-popup" role="dialog" aria-modal="true" aria-labelledby="sfr-popup-title">
+
+    <!-- Floral header band -->
+    <div class="sfr-popup-header" aria-hidden="true">
+      <svg class="sfr-popup-leaves" viewBox="0 0 380 86" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <!-- left branch -->
+        <path d="M8,72 C38,55 78,48 132,57" stroke="rgba(255,255,255,0.42)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="40" cy="57" rx="15" ry="6" fill="rgba(255,255,255,0.2)"  transform="rotate(-26 40 57)"/>
+        <ellipse cx="76" cy="49" rx="12" ry="5" fill="rgba(255,255,255,0.16)" transform="rotate(-12 76 49)"/>
+        <ellipse cx="12" cy="69" rx="9"  ry="4" fill="rgba(255,255,255,0.13)" transform="rotate(-42 12 69)"/>
+        <circle cx="8"  cy="72" r="7"   fill="rgba(255,255,255,0.28)"/>
+        <circle cx="8"  cy="72" r="4"   fill="rgba(255,255,255,0.48)"/>
+        <circle cx="8"  cy="72" r="1.8" fill="rgba(255,255,255,0.72)"/>
+        <!-- right branch (mirror) -->
+        <path d="M372,72 C342,55 302,48 248,57" stroke="rgba(255,255,255,0.42)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="340" cy="57" rx="15" ry="6" fill="rgba(255,255,255,0.2)"  transform="rotate(26 340 57)"/>
+        <ellipse cx="304" cy="49" rx="12" ry="5" fill="rgba(255,255,255,0.16)" transform="rotate(12 304 49)"/>
+        <ellipse cx="368" cy="69" rx="9"  ry="4" fill="rgba(255,255,255,0.13)" transform="rotate(42 368 69)"/>
+        <circle cx="372" cy="72" r="7"   fill="rgba(255,255,255,0.28)"/>
+        <circle cx="372" cy="72" r="4"   fill="rgba(255,255,255,0.48)"/>
+        <circle cx="372" cy="72" r="1.8" fill="rgba(255,255,255,0.72)"/>
+      </svg>
+      <!-- Gold number medallion -->
+      <span class="sfr-popup-badge" id="sfr-popup-badge">1</span>
+    </div>
+
+    <!-- Content body -->
+    <div class="sfr-popup-body">
+      <h3 class="sfr-popup-title" id="sfr-popup-title">Location Title</h3>
+
+      <!-- Botanical divider -->
+      <div class="sfr-popup-divider" aria-hidden="true">
+        <svg viewBox="0 0 130 16" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="8" x2="48" y2="8" stroke="#D96C7E" stroke-width="0.8" opacity="0.38"/>
+          <path d="M56,8 C54,4 50,2 56,8 C62,14 64,2 56,8Z" fill="#D96C7E" opacity="0.6"/>
+          <circle cx="65" cy="8" r="2.2" fill="#C9A96E"/>
+          <path d="M74,8 C72,4 68,2 74,8 C80,14 82,2 74,8Z" fill="#D96C7E" opacity="0.6"/>
+          <line x1="82" y1="8" x2="130" y2="8" stroke="#D96C7E" stroke-width="0.8" opacity="0.38"/>
+        </svg>
+      </div>
+
+      <p class="sfr-popup-desc" id="sfr-popup-desc">Details...</p>
+      <button class="sfr-close-btn" id="sfr-close-btn">Close</button>
+    </div>
+
+  </div>
 </body>
 </html>
