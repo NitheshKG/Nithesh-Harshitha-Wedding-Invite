@@ -823,6 +823,27 @@ html.cover-active body {
   transition: background 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
+
+.map-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.45rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-light);
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  user-select: none;
+}
+.map-hint svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
 .sfr-map-pointer:hover,
 .sfr-map-pointer:focus {
   background: rgba(255, 189, 89, 0.55);
@@ -1325,7 +1346,7 @@ html.cover-active body {
    9b. VENUE / LOCATION SECTION
    ================================================================ */
 #venue {
-  padding: var(--space-xl) var(--space-sm) var(--space-lg);
+  padding: var(--space-lg) var(--space-sm) var(--space-md);
   background: linear-gradient(to bottom,
     var(--ivory) 0%,
     var(--blush-light) 50%,
@@ -1343,6 +1364,10 @@ html.cover-active body {
   height: 3px;
   background: linear-gradient(to right,
     transparent, var(--gold), var(--rose), var(--gold), transparent);
+}
+
+#venue .section-header {
+  margin-bottom: var(--space-md);
 }
 
 .venue-body {
