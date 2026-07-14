@@ -975,7 +975,7 @@ function initSFRMap() {
     { id: 1, x: 48.5, y: 45, title: 'Main Villa — Nichayathartham', desc: 'Where Our Journey Begins \uD83D\uDC8D  This is the spot where our families come together, promises are made, and our official countdown begins!' },
     { id: 2, x: 61.6, y: 27.0, title: 'Swar Lawn — Reception',         desc: 'Party & Feast Destination \uD83C\uDF89  Come over here for music, laughter, a grand feast, and to toast the newlyweds.' },
     { id: 3, x: 53, y: 45, title: 'Main Villa — Upanayanam',       desc: 'The Sacred Threshold \u2728  The venue for the traditional thread ceremony. Join us to bless a beautiful new milestone of wisdom and tradition.' },
-    { id: 4, x: 61.4, y: 36.0, title: 'Swar Lawn — Wedding',          desc: 'The Main Event (Muhurtham) \uD83C\uDF38  The big moment! Witness the sacred vows, the tying of the mangalsutra, and the start of our forever.' }
+    { id: 4, x: 61.4, y: 36.0, title: 'Swar Lawn — Muhurtham',          desc: 'The Main Event Muhurtham \uD83C\uDF38  The big moment! Witness the sacred vows, the tying of the mangalsutra, and the start of our forever.' }
   ];
 
   locations.forEach(function(loc) {
