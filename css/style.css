@@ -286,7 +286,17 @@ html.cover-active body {
   width: 100%;
   pointer-events: none;   /* clicks fall through to #cover-page */
   transition: opacity 0.32s ease;
+  /* Safety net: if content is taller than the viewport (short laptop
+     screens, high zoom), cap height and allow internal scrolling so
+     the Open Invitation button is always reachable.                  */
+  max-height: calc(100vh - 1rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+/* Hide scrollbar on cover-inner — keep the aesthetic clean */
+.cover-inner::-webkit-scrollbar { width: 0; display: none; }
+.cover-inner { scrollbar-width: none; }
 
 /* Re-enable pointer events on the button only */
 .cover-open-btn { pointer-events: auto; }
@@ -1963,6 +1973,78 @@ html.cover-active body {
     padding: 0.55rem 0.5rem 0.4rem;
   }
 
+}
+
+/* ================================================================
+   18. COVER PAGE — SHORT VIEWPORT / LAPTOP FIX
+       Targets short-height screens (typical laptops, landscape
+       tablets) where the name script font + decorations would push
+       the "Open Invitation" button below the visible viewport.
+   ================================================================ */
+
+/* — Compact layout: viewport ≤ 760px tall (common laptops) — */
+@media (max-height: 760px) {
+  .cover-inner {
+    padding: 0.9rem 1.8rem 0.8rem;
+  }
+  .cover-ornament-top svg {
+    width: min(130px, 40vw);
+    margin-bottom: 0.45rem;
+  }
+  .cover-eyebrow {
+    margin-bottom: 0.25rem;
+  }
+  .cover-invite {
+    margin-bottom: 0.5rem;
+    line-height: 1.55;
+  }
+  .cover-name {
+    font-size: clamp(2.5rem, 10.5vw, 4.6rem);
+  }
+  .cover-names-wrap {
+    margin-bottom: 0.4rem;
+  }
+  .cover-divider svg {
+    margin-bottom: 0.3rem;
+  }
+  .cover-date {
+    margin-bottom: 0.12rem;
+  }
+  .cover-venue {
+    margin-bottom: 0.9rem;
+  }
+  .cover-open-btn {
+    gap: 0.45rem;
+  }
+  /* "or tap anywhere" hint is decorative — hide it to save space */
+  .cover-tap-hint {
+    display: none;
+  }
+}
+
+/* — Ultra-compact: viewport ≤ 580px tall (landscape phone / small laptop) — */
+@media (max-height: 580px) {
+  .cover-inner {
+    padding: 0.5rem 1.8rem 0.5rem;
+  }
+  /* Drop the top ornament to reclaim ~70px */
+  .cover-ornament-top {
+    display: none;
+  }
+  /* Drop the sub-invite line */
+  .cover-invite {
+    display: none;
+  }
+  .cover-name {
+    font-size: clamp(1.9rem, 8.5vw, 3.4rem);
+  }
+  .cover-venue {
+    margin-bottom: 0.55rem;
+  }
+  .cover-seal {
+    width:  clamp(58px, 14vw, 74px);
+    height: clamp(58px, 14vw, 74px);
+  }
 }
 
 /* ================================================================
